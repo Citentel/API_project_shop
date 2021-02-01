@@ -4,50 +4,51 @@ namespace App\Entity;
 
 use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UsersRepository::class)
  */
-class Users
+class Users implements UserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $id;
+    private int $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $firstname;
+    private string $firstname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $lastname;
+    private string $lastname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $email;
+    private string $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $password;
+    private string $password;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $role = [];
+    private string $role;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getFirstname(): ?string
+    public function getFirstname(): string
     {
         return $this->firstname;
     }
@@ -59,7 +60,7 @@ class Users
         return $this;
     }
 
-    public function getLastname(): ?string
+    public function getLastname(): string
     {
         return $this->lastname;
     }
@@ -71,7 +72,7 @@ class Users
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -83,7 +84,7 @@ class Users
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -95,15 +96,35 @@ class Users
         return $this;
     }
 
-    public function getRole(): ?array
+    public function getRole(): string
     {
         return $this->role;
     }
 
-    public function setRole(array $role): self
+    public function setRole(string $role): self
     {
         $this->role = $role;
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return [$this->getRole()];
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function getUsername(): string
+    {
+        return $this->getEmail();
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
     }
 }
