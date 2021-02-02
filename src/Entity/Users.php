@@ -45,10 +45,19 @@ class Users implements UserInterface
     private Roles $role;
 
     /**
-     * @ORM\OneToOne(targetEntity=UsersHelper::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private UsersHelper $helper;
+    private $verifyCode;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $restartCode;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $wasDeleted;
 
     public function getId(): int
     {
@@ -135,14 +144,38 @@ class Users implements UserInterface
         return $this;
     }
 
-    public function getHelper(): UsersHelper
+    public function getVerifyCode(): ?string
     {
-        return $this->helper;
+        return $this->verifyCode;
     }
 
-    public function setHelper(UsersHelper $helper): self
+    public function setVerifyCode(?string $verifyCode): self
     {
-        $this->helper = $helper;
+        $this->verifyCode = $verifyCode;
+
+        return $this;
+    }
+
+    public function getRestartCode(): ?string
+    {
+        return $this->restartCode;
+    }
+
+    public function setRestartCode(?string $restartCode): self
+    {
+        $this->restartCode = $restartCode;
+
+        return $this;
+    }
+
+    public function getWasDeleted(): ?bool
+    {
+        return $this->wasDeleted;
+    }
+
+    public function setWasDeleted(?bool $wasDeleted): self
+    {
+        $this->wasDeleted = $wasDeleted;
 
         return $this;
     }

@@ -32,7 +32,7 @@ class Roles
     /**
      * @ORM\OneToMany(targetEntity=Users::class, mappedBy="role")
      */
-    private ArrayCollection $users;
+    private $users;
 
     public function __construct()
     {

@@ -10,29 +10,17 @@ class GenerateResponseService
     private string $messageResponse = 'looks good';
     private array $dataResponse = [];
 
-    public function setCodeResponse(int $codeResponse): self
+    private function setProperties(int $code, string $message, array $dataResponse): void
     {
-        $this->codeResponse = $codeResponse;
-
-        return $this;
-    }
-
-    public function setMessageResponse(string $messageResponse): self
-    {
-        $this->messageResponse = $messageResponse;
-
-        return $this;
-    }
-
-    public function setDataResponse(array $dataResponse): self
-    {
+        $this->codeResponse = $code;
+        $this->messageResponse = $message;
         $this->dataResponse = $dataResponse;
-
-        return $this;
     }
 
-    public function generateJsonResponse(): array
+    public function generateJsonResponse(int $code, string $message, array $dataResponse = []): array
     {
+        $this->setProperties($code, $message, $dataResponse);
+
         $data = [
             'code' => $this->codeResponse,
             'message' => $this->messageResponse,
@@ -48,8 +36,10 @@ class GenerateResponseService
         ];
     }
 
-    public function generateArrayResponse(): array
+    public function generateArrayResponse(int $code, string $message, array $dataResponse = []): array
     {
+        $this->setProperties($code, $message, $dataResponse);
+
         $data = [
             'code' => $this->codeResponse,
             'message' => $this->messageResponse,
