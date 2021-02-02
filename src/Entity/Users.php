@@ -39,9 +39,16 @@ class Users implements UserInterface
     private string $password;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\ManyToOne(targetEntity=Roles::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private string $role;
+    private Roles $role;
+
+    /**
+     * @ORM\OneToOne(targetEntity=UsersHelper::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private UsersHelper $helper;
 
     public function getId(): int
     {
@@ -96,18 +103,6 @@ class Users implements UserInterface
         return $this;
     }
 
-    public function getRole(): string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
     public function getRoles(): array
     {
         return [$this->getRole()];
@@ -126,5 +121,29 @@ class Users implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getRole(): Roles
+    {
+        return $this->role;
+    }
+
+    public function setRole(Roles $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getHelper(): UsersHelper
+    {
+        return $this->helper;
+    }
+
+    public function setHelper(UsersHelper $helper): self
+    {
+        $this->helper = $helper;
+
+        return $this;
     }
 }
