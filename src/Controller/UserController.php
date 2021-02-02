@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Users;
+use App\Model\EmailPrepareModel;
 use App\Service\CheckRequestService;
+use App\Service\EmailSendService;
 use App\Service\GenerateResponseService;
 use App\Service\SearchRolesService;
 use App\Service\SearchUsersService;
@@ -22,6 +24,8 @@ class UserController extends AbstractController
     private EntityManagerInterface $entityManager;
     private SearchRolesService $searchRolesService;
     private ValidatorUserDataService $validatorUserDataService;
+    private EmailPrepareModel $emailPrepareModel;
+    private EmailSendService $emailSendService;
 
     public function __construct
     (
@@ -30,7 +34,9 @@ class UserController extends AbstractController
         EntityManagerInterface $entityManager,
         SearchUsersService $searchUsersService,
         SearchRolesService $searchRolesService,
-        ValidatorUserDataService $validatorUserDataService
+        ValidatorUserDataService $validatorUserDataService,
+        EmailPrepareModel $emailPrepareModel,
+        EmailSendService $emailSendService
     )
     {
         $this->checkRequestService = $checkRequestService;
@@ -39,6 +45,8 @@ class UserController extends AbstractController
         $this->searchUsersService = $searchUsersService;
         $this->searchRolesService = $searchRolesService;
         $this->validatorUserDataService = $validatorUserDataService;
+        $this->emailPrepareModel = $emailPrepareModel;
+        $this->emailSendService = $emailSendService;
     }
 
     /**
@@ -78,7 +86,7 @@ class UserController extends AbstractController
         }
 
         $role = $isRoleExist['data']['role'];
-        $verifyCode = substr(md5($data['email']), 0, 9);
+        $verifyCode = substr(password_hash(md5($data['email']), PASSWORD_BCRYPT), 0, 10);
 
         $newUser = (new Users())
             ->setFirstname($data['firstname'])
@@ -90,6 +98,22 @@ class UserController extends AbstractController
 
         $this->entityManager->persist($newUser);
         $this->entityManager->flush();
+
+        $isUserExist = $this->searchUsersService->findOneByEmail($data['email']);
+
+        if ($isUserExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse(500, 'something goes wrong')['data'];
+        }
+
+        $userId = $isUserExist['data']['user']->getId();
+
+        $email = $this->emailPrepareModel
+            ->to($data['email'])
+            ->subject('User registration')
+            ->html(
+                '<p><b>Hello there!</b></p><p>You have been registered with the application. To use the app fully go to the link below and verify your account.</p><p>http://127.0.0.1::8000/user/verify/?id='.$userId.'&vc='.$verifyCode.'</p><p><small>This message has been generated automatically. Do not reply to this message.</small></p>');
+
+        $this->emailSendService->sendEmail($email);
 
         return $this->generateResponseService->generateJsonResponse(200, 'user added to database')['data'];
     }
