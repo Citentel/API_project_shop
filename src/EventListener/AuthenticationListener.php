@@ -31,7 +31,10 @@ class AuthenticationListener
             'firstname' => $user->getFirstname(),
             'lastname' => $user->getLastname(),
             'email' => $user->getEmail(),
-            'role' => $user->getRole(),
+            'role' => [
+                'id' => $user->getRole()->getId(),
+                'name' => $user->getRole()->getName(),
+            ],
         ];
 
         $event->setData($data);
