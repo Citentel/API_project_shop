@@ -15,22 +15,22 @@ class UsersHelper
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int  $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $restartCode;
+    private ?string $restartCode;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $verifiCode;
+    private ?string $verifiCode;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $wasDeleted;
+    private ?bool $wasDeleted;
 
     public function getId(): ?int
     {

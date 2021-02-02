@@ -15,36 +15,36 @@ class Roles
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $id;
+    private int $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
-    private $name;
+    private string $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $cost;
+    private int $cost;
 
     /**
      * @ORM\OneToMany(targetEntity=Users::class, mappedBy="role")
      */
-    private $users;
+    private ArrayCollection $users;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -56,7 +56,7 @@ class Roles
         return $this;
     }
 
-    public function getCost(): ?int
+    public function getCost(): int
     {
         return $this->cost;
     }
