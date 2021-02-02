@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Users;
-use App\Entity\UsersHelper;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\SearchRolesService;
