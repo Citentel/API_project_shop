@@ -22,13 +22,20 @@ class SearchUsersService
 
     public function findOneById(int $uid): array
     {
-        // TODO add body function findOneById
+        $user = $this->entityManager->getRepository(Users::class)->findOneById($uid);
+
+        return $this->createMessage($user);
     }
 
     public function findOneByEmail(string $email): array
     {
         $user = $this->entityManager->getRepository(Users::class)->findOneByEmail($email);
 
+        return $this->createMessage($user);
+    }
+
+    private function createMessage($user): array
+    {
         if ($user === null) {
             return $this->generateResponseService->generateArrayResponse(404, 'user does not exist');
         }

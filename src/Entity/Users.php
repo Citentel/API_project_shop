@@ -47,17 +47,17 @@ class Users implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $verifyCode;
+    private ?string $verifyCode;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $restartCode;
+    private ?string $restartCode;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $wasDeleted;
+    private ?bool $wasDeleted;
 
     public function getId(): int
     {
@@ -107,7 +107,7 @@ class Users implements UserInterface
 
     public function setPassword(string $password): self
     {
-        $this->password = $password;
+        $this->password = (string)password_hash($password, PASSWORD_BCRYPT);
 
         return $this;
     }
@@ -151,7 +151,13 @@ class Users implements UserInterface
 
     public function setVerifyCode(?string $verifyCode): self
     {
-        $this->verifyCode = $verifyCode;
+        if ($verifyCode !== null) {
+            $this->verifyCode = (string)password_hash($verifyCode, PASSWORD_BCRYPT);
+
+            return $this;
+        }
+
+        $this->verifyCode = null;
 
         return $this;
     }
@@ -163,7 +169,13 @@ class Users implements UserInterface
 
     public function setRestartCode(?string $restartCode): self
     {
-        $this->restartCode = $restartCode;
+        if ($restartCode !== null) {
+            $this->restartCode = (string)password_hash($restartCode, PASSWORD_BCRYPT);
+
+            return $this;
+        }
+
+        $this->restartCode = null;
 
         return $this;
     }

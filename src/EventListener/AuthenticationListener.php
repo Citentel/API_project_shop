@@ -26,6 +26,22 @@ class AuthenticationListener
             return;
         }
 
+        if ($user->getWasDeleted() === true) {
+            $event->setData([
+                'code'  => '401',
+                'message' => 'Bad credentials, please verify that your username/password are correctly set',
+            ]);
+            return;
+        }
+
+        if ($user->getVerifyCode() !== null) {
+            $event->setData([
+                'code'  => '401',
+                'message' => 'Email has not been verified',
+            ]);
+            return;
+        }
+
         $data['user'] = [
             'uid' => $user->getId(),
             'firstname' => $user->getFirstname(),
@@ -43,7 +59,7 @@ class AuthenticationListener
     public function onAuthenticationFailureResponse(AuthenticationFailureEvent $event)
     {
         $data = [
-            'status'  => '401 Unauthorized',
+            'code'  => '401',
             'message' => 'Bad credentials, please verify that your username/password are correctly set',
         ];
 
@@ -62,7 +78,7 @@ class AuthenticationListener
     public function onJWTNotFound(JWTNotFoundEvent $event)
     {
         $data = [
-            'status'  => '403 Forbidden',
+            'code'  => '403',
             'message' => 'Missing token',
         ];
 

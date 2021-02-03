@@ -58,13 +58,56 @@ class ValidatorUserDataService
             ]
         );
 
-        $errorsFields = $this->getErrorMessage($testFields);
+        return $this->returnResponse($testFields);
+    }
 
-        if (!empty($errorsFields)) {
-            return $this->generateResponseService->generateJsonResponse(423, 'invalid fields', $errorsFields);
-        }
+    public function checkPassword(string $newPassword): array
+    {
+        $testFields['password'] = $this->validator->validate(
+            $newPassword, [
+                new Length(['min' => 5]),
+                new NotBlank(),
+            ]
+        );
 
-        return $this->generateResponseService->generateArrayResponse(200, 'fields filled in correctly');
+        return $this->returnResponse($testFields);
+    }
+
+    public function checkFirstname(string $newFirstname): array
+    {
+        $testFields['firstname'] = $this->validator->validate(
+            $newFirstname, [
+                new Length(['min' => 2]),
+                new NotBlank(),
+            ]
+        );
+
+        return $this->returnResponse($testFields);
+    }
+
+    public function checkLastname(string $newLastname): array
+    {
+        $testFields['lastname'] = $this->validator->validate(
+            $newLastname, [
+                new Length(['min' => 2]),
+                new NotBlank(),
+            ]
+        );
+
+        return $this->returnResponse($testFields);
+    }
+
+    public function checkEmail(string $newEmail): array
+    {
+        $testFields['email'] = $this->validator->validate(
+            $newEmail, [
+                new Length(['min' => 5]),
+                new NotBlank(),
+                new Email(),
+            ]
+        );
+
+        return $this->returnResponse($testFields);
     }
 
     private function getErrorMessage(array $testFields): array
@@ -83,6 +126,17 @@ class ValidatorUserDataService
         }
 
         return $responseError;
+    }
+
+    private function returnResponse(array $testFields): array
+    {
+        $errorsFields = $this->getErrorMessage($testFields);
+
+        if (!empty($errorsFields)) {
+            return $this->generateResponseService->generateJsonResponse(423, 'invalid fields', $errorsFields);
+        }
+
+        return $this->generateResponseService->generateArrayResponse(200, 'fields filled in correctly');
     }
 
 }
