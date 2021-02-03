@@ -521,6 +521,11 @@ class UserController extends AbstractController
             return $isChanged['data'];
         }
 
+        $user->setArchivedEmail(null);
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
         return $this->generateResponseService->generateJsonResponse(200, 'change email user')['data'];
     }
 
@@ -576,7 +581,6 @@ class UserController extends AbstractController
                 '<p><b>Hello there!</b></p><p>Your email address has been changed. To use the app fully go to the link below and verify your email.</p><p>http://127.0.0.1::8000/user/verify/?uid='.$user->getId().'&vc='.$verifyCode.'</p><p><small>This message has been generated automatically. Do not reply to this message.</small></p>');
 
         $this->emailSendService->sendEmail($email);
-
 
         return $this->generateResponseService->generateArrayResponse(200, 'changed email', ['user' => $user]);
     }
