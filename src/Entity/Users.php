@@ -34,6 +34,11 @@ class Users implements UserInterface
     private string $email;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $archivedEmail;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=false)
      */
     private string $password;
@@ -96,6 +101,18 @@ class Users implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getArchivedEmail(): ?string
+    {
+        return $this->archivedEmail;
+    }
+
+    public function setArchivedEmail(?string $archivedEmail): self
+    {
+        $this->archivedEmail = $archivedEmail;
 
         return $this;
     }

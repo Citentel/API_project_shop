@@ -471,6 +471,59 @@ class UserController extends AbstractController
         return $this->generateResponseService->generateJsonResponse(200, 'get all users', $response)['data'];
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/user/checkArchivedEmail", methods={"POST"})
+     */
+    public function checkAccountByArchivedEmail(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['firstname', 'lastname', 'email', 'password'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $checkDataFromUser = $this->validatorUserDataService->checkRegisterData($data);
+
+        if ($checkDataFromUser['code'] !== 200) {
+            return $checkDataFromUser['data'];
+        }
+
+        $isUserExist = $this->searchUsersService->findOneByArchivedEmail($data['email']);
+
+        if ($isUserExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse(404, 'user is not exist')['data'];
+        }
+
+        /** @var Users $user */
+        $user = $isUserExist['data']['user'];
+
+        if (!password_verify($data['password'], $user->getPassword())) {
+            return $this->generateResponseService->generateJsonResponse(403, 'invalid password')['data'];
+        }
+
+        $compareFirstname = $this->compareTwoStrings($user->getFirstname(), $data['firstname']);
+        $compareLastname = $this->compareTwoStrings($user->getLastname(), $data['lastname']);
+
+        if ($compareFirstname !== true && $compareLastname !== true) {
+            return $this->generateResponseService->generateJsonResponse(403, 'invalid firstname or lastname')['data'];
+        }
+
+        $isChanged = $this->changeEmail($user, $data['email']);
+
+        if ($isChanged['code'] !== 200) {
+            return $isChanged['data'];
+        }
+
+        return $this->generateResponseService->generateJsonResponse(200, 'change email user')['data'];
+    }
+
     private function changeFirstname(Users $user, string $newFirstname): array
     {
         $checkDataFromUser = $this->validatorUserDataService->checkFirstname($newFirstname);
@@ -513,6 +566,7 @@ class UserController extends AbstractController
 
         $verifyCode = $this->generateCode($newEmail);
 
+        $user->setArchivedEmail($user->getEmail());
         $user->setEmail($newEmail)->setVerifyCode($verifyCode);
 
         $email = $this->emailPrepareModel
@@ -552,5 +606,18 @@ class UserController extends AbstractController
     {
         $code = substr(password_hash(md5($email), PASSWORD_BCRYPT), 0, $maxLength);
         return str_replace(self::$REGEX_CODE, '0', $code);
+    }
+
+    private function compareTwoStrings(string $str1, string $str2): bool
+    {
+        $str1 = $this->prepareStringToCompare($str1);
+        $str2 = $this->prepareStringToCompare($str2);
+
+        return strcmp($str1, $str2) === 0;
+    }
+
+    private function prepareStringToCompare(string $toCompare): string
+    {
+        return preg_replace('/\s+/', '', strtolower($toCompare));
     }
 }

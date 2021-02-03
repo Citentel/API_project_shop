@@ -34,6 +34,13 @@ class SearchUsersService
         return $this->createMessage($user);
     }
 
+    public function findOneByArchivedEmail(string $archivedEmail): array
+    {
+        $user = $this->entityManager->getRepository(Users::class)->findOneByArchivedEmail($archivedEmail);
+
+        return $this->createMessage($user);
+    }
+
     private function createMessage($user): array
     {
         if ($user === null) {
