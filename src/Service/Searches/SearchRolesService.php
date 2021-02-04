@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Searches;
 
 use App\Entity\Roles;
-use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\GenerateResponseService;
 
 class SearchRolesService
 {
@@ -23,13 +23,20 @@ class SearchRolesService
 
     public function findOneById(int $id): array
     {
-        // TODO add body function findOneById
+        $role = $this->entityManager->getRepository(Roles::class)->findOneById($id);
+
+        return $this->createMessage($role);
     }
 
     public function findOneByName(string $name): array
     {
         $role = $this->entityManager->getRepository(Roles::class)->findOneByName($name);
 
+        return $this->createMessage($role);
+    }
+
+    private function createMessage($role): array
+    {
         if ($role === null) {
             return $this->generateResponseService->generateArrayResponse(404, 'role does not exist');
         }

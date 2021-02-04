@@ -7,9 +7,9 @@ use App\Model\EmailPrepareModel;
 use App\Service\CheckRequestService;
 use App\Service\EmailSendService;
 use App\Service\GenerateResponseService;
-use App\Service\SearchRolesService;
-use App\Service\SearchUsersService;
-use App\Service\ValidatorUserDataService;
+use App\Service\Searches\SearchRolesService;
+use App\Service\Searches\SearchUsersService;
+use App\Service\Validators\ValidatorUserDataService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,7 +26,7 @@ class UserController extends AbstractController
     private ValidatorUserDataService $validatorUserDataService;
     private EmailPrepareModel $emailPrepareModel;
     private EmailSendService $emailSendService;
-    private static array $REGEX_CODE = ['/', '.', ',', '\\', '!', '#', '&', '?', '$', '%'];
+    private static array $REGEX_CODE = ['/', '.', ',', '\\'];
 
     public function __construct
     (

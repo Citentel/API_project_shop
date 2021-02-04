@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -63,6 +65,16 @@ class Users implements UserInterface
      * @ORM\Column(type="boolean", nullable=true)
      */
     private ?bool $wasDeleted;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Addresses::class, mappedBy="users")
+     */
+    private $addresses;
+
+    public function __construct()
+    {
+        $this->addresses = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -205,6 +217,36 @@ class Users implements UserInterface
     public function setWasDeleted(?bool $wasDeleted): self
     {
         $this->wasDeleted = $wasDeleted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Addresses[]
+     */
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Addresses $address): self
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Addresses $address): self
+    {
+        if ($this->addresses->removeElement($address)) {
+            // set the owning side to null (unless already changed)
+            if ($address->getUsers() === $this) {
+                $address->setUsers(null);
+            }
+        }
 
         return $this;
     }

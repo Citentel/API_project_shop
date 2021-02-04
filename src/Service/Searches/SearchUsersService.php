@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Searches;
 
 use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\GenerateResponseService;
 
 class SearchUsersService
 {
