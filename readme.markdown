@@ -7,8 +7,6 @@
 1. Composer 2.x
 1. PHP 7.4.x or 8.0.x
 
-<hr/>
-
 ## First steps
 ```
 git clone https://github.com/Citentel/API_project_shop.git
@@ -40,8 +38,6 @@ or
 symfony server:start
 ```
 If the server is working correctly go to url: 127.0.0.1:8000/documentation. There you will find a detailed documentation for the api.
-
-<hr/>
 
 # Author 
 
