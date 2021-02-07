@@ -47,7 +47,7 @@ class CheckRequestService
 
     public function checker(): array
     {
-        $requestDecode = json_decode($this->request->getContent(), true);
+        $requestDecode = $this->getDataByMethod();
 
         if ($requestDecode === null) {
             return $this->generateResponseService->generateJsonResponse(400, 'something goes wrong with decode request');
@@ -80,5 +80,14 @@ class CheckRequestService
         }
 
         return $requestDecode;
+    }
+
+    private function getDataByMethod(): array
+    {
+        if ($this->request->getMethod() === 'GET') {
+            return $this->request->query->all();
+        }
+
+        return json_decode($this->request->getContent(), true);
     }
 }

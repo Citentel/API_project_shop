@@ -32,17 +32,8 @@ class SearchAddressesService
         return $this->createMessage($address);
     }
 
-    public function findByUserId(int $uid): array
+    public function findByUser(Users $user): array
     {
-        $isUserExist = $this->searchUsersService->findOneById($uid);
-
-        if ($isUserExist['code'] !== 200) {
-            return $isUserExist;
-        }
-
-        /** @var Users $user */
-        $user = $isUserExist['data']['user'];
-
         $addresses = $this->entityManager->getRepository(Addresses::class)->findBy(['users' => $user], ['id' => 'ASC']);
 
         if (empty($addresses)) {

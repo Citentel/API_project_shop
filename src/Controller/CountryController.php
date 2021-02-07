@@ -3,35 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Countries;
-use App\Service\CheckRequestService;
-use App\Service\GenerateResponseService;
-use App\Service\Searches\SearchCountriesService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Model\AbstractCountry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CountryController
+class CountryController extends AbstractCountry
 {
-    private CheckRequestService $checkRequestService;
-    private GenerateResponseService $generateResponseService;
-    private EntityManagerInterface $entityManager;
-    private SearchCountriesService $searchCountriesService;
-
-    public function __construct
-    (
-        CheckRequestService $checkRequestService,
-        GenerateResponseService $generateResponseService,
-        EntityManagerInterface $entityManager,
-        SearchCountriesService $searchCountriesService
-    )
-    {
-        $this->checkRequestService = $checkRequestService;
-        $this->generateResponseService = $generateResponseService;
-        $this->entityManager = $entityManager;
-        $this->searchCountriesService = $searchCountriesService;
-    }
-
     /**
      * @param Request $request
      * @return JsonResponse
@@ -99,21 +77,5 @@ class CountryController
         }
 
         return $this->generateResponseService->generateJsonResponse(200, 'get all countries', $countriesResponse)['data'];
-    }
-
-    private function getCountryBy(array $isCountryExist): JsonResponse
-    {
-        if ($isCountryExist['code'] !== 200) {
-            return $this->generateResponseService->generateJsonResponse(409, 'country does not exist')['data'];
-        }
-
-        /** @var Countries $country */
-        $country = $isCountryExist['data']['country'];
-
-        return $this->generateResponseService->generateJsonResponse(200, 'country return', [
-            'id' => $country->getId(),
-            'code' => $country->getCode(),
-            'name' => $country->getName(),
-        ])['data'];
     }
 }

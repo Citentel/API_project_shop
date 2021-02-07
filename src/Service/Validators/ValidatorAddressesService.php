@@ -46,7 +46,7 @@ class ValidatorAddressesService
                 $checkArray = $this->checkString;
                 $checkArray[] = new Country();
 
-                $checkedField = $this->checkStringField($fieldValue, $checkArray);
+                $checkedField = $this->checkStringField(strtoupper($fieldValue), $checkArray);
 
                 return $this->createMessage($checkedField);
         }
@@ -64,10 +64,10 @@ class ValidatorAddressesService
         }
 
         if (!empty($response)) {
-            return $this->generateResponseService->generateArrayResponse(412, 'something is wrong', $response);
+            return $this->generateResponseService->generateJsonResponse(412, 'something is wrong', $response);
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'looks good');
+        return $this->generateResponseService->generateJsonResponse(200, 'looks good');
     }
 
     private function checkStringField(string $field, array $checkArray): ConstraintViolationListInterface
