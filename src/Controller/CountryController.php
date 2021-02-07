@@ -13,7 +13,7 @@ class CountryController extends AbstractCountry
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/country/get/one")
+     * @Route("api/country/get/one")
      */
     public function getCountry(Request $request): JsonResponse
     {
@@ -55,7 +55,7 @@ class CountryController extends AbstractCountry
 
     /**
      * @return JsonResponse
-     * @Route("/country/get/all")
+     * @Route("api/country/get/all")
      */
     public function getCountries(): JsonResponse
     {

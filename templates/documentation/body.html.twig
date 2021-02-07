@@ -2,5 +2,281 @@
     <div class="container my-4">
         <h1>Documentation</h1>
         <hr>
+        <h2 class="mb-3">First steps</h2>
+        <div class="alert alert-secondary" role="alert">
+            <p class="my-0">$ mkdir -p config/jwt</p>
+            <p class="my-0">$ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096</p>
+            <p class="my-0">$ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout</p>
+        </div>
+        <div class="alert alert-secondary" role="alert">
+            <p class="my-0">$ php bin/console d:d:c</p>
+            <p class="my-0">$ php bin/console d:s:u --force</p>
+            <p class="my-0">$ php bin/console e:c:f</p>
+        </div>
+        <hr>
+        <h2 class="mb-3">API</h2>
+        <h3>User</h3>
+        <div class="alert alert-success" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-success">GET</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/user/get/single
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>?uid=int</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-success">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-success" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-success">GET</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/user/get/all
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small></small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-success">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-warning">POST</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/user/register
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>{"firstname": string, "lastname": string, "email": string, "password": string}</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-danger">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-warning">POST</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/user/restartCode
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>{"email": string}</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-danger">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-warning">POST</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/user/checkArchivedEmail
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>{"firstname": string, "lastname": string, "email": string, "password": string}</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-danger">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-info">PATCH</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/user/checkArchivedEmail
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>{"uid": int, "vc": string}</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-danger">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-info">PATCH</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/user/restartPassword
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>{"email": string, "rc": string}</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-danger">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-info">PATCH</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/user/changeData
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>{"uid": int, "new_firstname": ?string, "new_lastname": ?string, "new_email": ?string, "new_password": ?string}</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-success">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <h3>Address</h3>
+        <div class="alert alert-success" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-success">GET</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/address/getForUser
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>?uid=int</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-success">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-warning">POST</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/address/add
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>{"uid": int, "country": string, "city": string, "street": string, "home_number": int, "premises_number": int, "zip": int, "display": ?bool}</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-success">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-info">PATCH</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/address/changeData
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>{"address_id": int, "uid": int, "new_country": ?string, "new_city": ?string, "new_street": ?string, "new_home_number": ?int, "new_premises_number": ?int, "new_zip": ?int, "new_display": ?bool}</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-success">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <h3>Country</h3>
+        <div class="alert alert-success" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-success">GET</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/country/get/one
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small>?uid=int <b>||</b> ?code=string <b>||</b> ?name=string</small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-success">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-success" role="alert">
+            <div class="row">
+                <div class="col-1 align-self-center">
+                    <h4 class="my-0">
+                        <span class="badge bg-success">GET</span>
+                    </h4>
+                </div>
+                <div class="col-4 align-self-center">
+                    api/country/get/all
+                </div>
+                <div class="col-6 align-self-center text-end">
+                    <small></small>
+                </div>
+                <div class="col-1 align-self-center">
+                    <p class="my-0">
+                        <span class="badge bg-success">Token</span>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

@@ -13,7 +13,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/register", methods={"POST"})
+     * @Route("api/user/register", methods={"POST"})
      */
     public function registerUser(Request $request): JsonResponse
     {
@@ -83,7 +83,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/verify", methods={"PATCH"})
+     * @Route("api/user/verify", methods={"PATCH"})
      */
     public function verificationUser(Request $request): JsonResponse
     {
@@ -134,7 +134,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/restartCode", methods={"POST"})
+     * @Route("api/user/restartCode", methods={"POST"})
      */
     public function generateRestartCode(Request $request): JsonResponse
     {
@@ -179,7 +179,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/restartPassword", methods={"PATCH"})
+     * @Route("api/user/restartPassword", methods={"PATCH"})
      */
     public function restartPassword(Request $request): JsonResponse
     {
@@ -232,7 +232,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/delete", methods={"DELETE"})
+     * @Route("api/user/delete", methods={"DELETE"})
      */
     public function deleteUser(Request $request): JsonResponse
     {
@@ -275,7 +275,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/changeData", methods={"PATCH"})
+     * @Route("api/user/changeData", methods={"PATCH"})
      */
     public function changeDataUser(Request $request): JsonResponse
     {
@@ -358,7 +358,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/get/single", methods={"GET"})
+     * @Route("api/user/get/single", methods={"GET"})
      */
     public function getSingleUser(Request $request): JsonResponse
     {
@@ -399,7 +399,7 @@ class UserController extends AbstractUser
 
     /**
      * @return JsonResponse
-     * @Route("/user/get/all", methods={"GET"})
+     * @Route("api/user/get/all", methods={"GET"})
      */
     public function getAllUsers(): JsonResponse
     {
@@ -434,7 +434,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/user/checkArchivedEmail", methods={"POST"})
+     * @Route("api/user/checkArchivedEmail", methods={"POST"})
      */
     public function checkAccountByArchivedEmail(Request $request): JsonResponse
     {

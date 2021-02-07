@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class Documentation extends AbstractController
 {
     /**
-     * @Route("/documentation")
+     * @Route("documentation")
      */
     public function renderDocumentation(): Response
     {

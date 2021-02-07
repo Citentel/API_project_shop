@@ -14,7 +14,7 @@ class AddressController extends AbstractAddress
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/address/add", methods={"POST"})
+     * @Route("api/address/add", methods={"POST"})
      */
     public function addAddress(Request $request): JsonResponse
     {
@@ -74,7 +74,7 @@ class AddressController extends AbstractAddress
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/address/getForUser", methods={"GET"})
+     * @Route("api/address/getForUser", methods={"GET"})
      */
     public function getAddressesUser(Request $request): JsonResponse
     {
@@ -132,7 +132,7 @@ class AddressController extends AbstractAddress
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/address/changeData", methods={"PATCH"})
+     * @Route("api/address/changeData", methods={"PATCH"})
      */
     public function changeAddress(Request $request): JsonResponse
     {
