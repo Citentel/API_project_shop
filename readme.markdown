@@ -1,5 +1,4 @@
 # API Shop Project
-<hr/>
 
 ## Project requirements 
 
