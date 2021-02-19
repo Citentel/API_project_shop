@@ -76,7 +76,20 @@ class CheckRequestService
         }
 
         foreach ($requestDecode as $item => $value) {
-            $requestDecode[$item] = htmlspecialchars($value);
+            switch (gettype($value)) {
+                case 'integer':
+                    $requestDecode[$item] = (int)htmlspecialchars($value);
+                    break;
+                case 'boolean':
+                    $requestDecode[$item] = (bool)htmlspecialchars($value);
+                    break;
+                case 'array':
+                    $requestDecode[$item] = $value;
+                    break;
+                default:
+                    $requestDecode[$item] = htmlspecialchars($value);
+                    break;
+            }
         }
 
         return $requestDecode;

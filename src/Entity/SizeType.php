@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\MainTypeRepository;
+use App\Repository\SizeTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=MainTypeRepository::class)
+ * @ORM\Entity(repositoryClass=SizeTypeRepository::class)
  */
-class MainType
+class SizeType
 {
     /**
      * @ORM\Id
@@ -25,14 +25,9 @@ class MainType
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Products::class, inversedBy="mainTypes")
+     * @ORM\ManyToMany(targetEntity=Products::class, inversedBy="sizeTypes")
      */
     private $products;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=SubType::class, inversedBy="mainTypes")
-     */
-    private $subTypes;
 
     public function __construct()
     {
@@ -76,18 +71,6 @@ class MainType
     public function removeProduct(Products $product): self
     {
         $this->products->removeElement($product);
-
-        return $this;
-    }
-
-    public function getSubTypes(): ?SubType
-    {
-        return $this->subTypes;
-    }
-
-    public function setSubTypes(?SubType $subTypes): self
-    {
-        $this->subTypes = $subTypes;
 
         return $this;
     }

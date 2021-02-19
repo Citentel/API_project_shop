@@ -50,16 +50,6 @@ class Products
     private $display;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $size;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $sexType;
-
-    /**
      * @ORM\OneToMany(targetEntity=ProductsImages::class, mappedBy="products")
      */
     private $images;
@@ -74,11 +64,23 @@ class Products
      */
     private $subTypes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SexType::class, mappedBy="products")
+     */
+    private $sexTypes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=SizeType::class, mappedBy="products")
+     */
+    private $sizeTypes;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->mainTypes = new ArrayCollection();
         $this->subTypes = new ArrayCollection();
+        $this->sexTypes = new ArrayCollection();
+        $this->sizeTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -261,6 +263,63 @@ class Products
     {
         if ($this->subTypes->removeElement($subType)) {
             $subType->removeProduct($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SexType[]
+     */
+    public function getSexTypes(): Collection
+    {
+        return $this->sexTypes;
+    }
+
+    public function addSexType(SexType $sexType): self
+    {
+        if (!$this->sexTypes->contains($sexType)) {
+            $this->sexTypes[] = $sexType;
+            $sexType->setProducts($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSexType(SexType $sexType): self
+    {
+        if ($this->sexTypes->removeElement($sexType)) {
+            // set the owning side to null (unless already changed)
+            if ($sexType->getProducts() === $this) {
+                $sexType->setProducts(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SizeType[]
+     */
+    public function getSizeTypes(): Collection
+    {
+        return $this->sizeTypes;
+    }
+
+    public function addSizeType(SizeType $sizeType): self
+    {
+        if (!$this->sizeTypes->contains($sizeType)) {
+            $this->sizeTypes[] = $sizeType;
+            $sizeType->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSizeType(SizeType $sizeType): self
+    {
+        if ($this->sizeTypes->removeElement($sizeType)) {
+            $sizeType->removeProduct($this);
         }
 
         return $this;

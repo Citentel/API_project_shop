@@ -1,12 +1,14 @@
 <?php
 
+
 namespace App\Service\Searches;
 
-use App\Entity\Products;
+
+use App\Entity\SexType;
 use App\Service\GenerateResponseService;
 use Doctrine\ORM\EntityManagerInterface;
 
-class SearchProductsService
+class SearchSexTypeService
 {
     private GenerateResponseService $generateResponseService;
     private EntityManagerInterface $entityManager;
@@ -23,24 +25,24 @@ class SearchProductsService
 
     public function findOneById(int $id): array
     {
-        $product = $this->entityManager->getRepository(Products::class)->findOneById($id);
+        $sexType = $this->entityManager->getRepository(SexType::class)->findOneById($id);
 
-        return $this->createMessage($product);
+        return $this->createMessage($sexType);
     }
 
     public function findOneByName(string $name): array
     {
-        $products = $this->entityManager->getRepository(Products::class)->findBy(['name' => $name]);
+        $sexType = $this->entityManager->getRepository(SexType::class)->findOneByName($name);
 
-        return $this->createMessage($products);
+        return $this->createMessage($sexType);
     }
 
-    private function createMessage($product): array
+    private function createMessage($sexType): array
     {
-        if (!$product) {
-            return $this->generateResponseService->generateArrayResponse(404, 'product does not exist');
+        if (!$sexType) {
+            return $this->generateResponseService->generateArrayResponse(404, 'sex type does not exist');
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'product exist', ['product' => $product]);
+        return $this->generateResponseService->generateArrayResponse(200, 'sex type exist', ['sexType' => $sexType]);
     }
 }

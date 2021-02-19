@@ -29,9 +29,15 @@ class SubType
      */
     private $products;
 
+    /**
+     * @ORM\OneToMany(targetEntity=MainType::class, mappedBy="subTypes")
+     */
+    private $mainTypes;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->mainTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,6 +77,36 @@ class SubType
     public function removeProduct(Products $product): self
     {
         $this->products->removeElement($product);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MainType[]
+     */
+    public function getMainTypes(): Collection
+    {
+        return $this->mainTypes;
+    }
+
+    public function addMainType(MainType $mainType): self
+    {
+        if (!$this->mainTypes->contains($mainType)) {
+            $this->mainTypes[] = $mainType;
+            $mainType->setSubTypes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMainType(MainType $mainType): self
+    {
+        if ($this->mainTypes->removeElement($mainType)) {
+            // set the owning side to null (unless already changed)
+            if ($mainType->getSubTypes() === $this) {
+                $mainType->setSubTypes(null);
+            }
+        }
 
         return $this;
     }
