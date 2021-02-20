@@ -28,7 +28,7 @@ class SearchSizeTypeService
         return $this->createMessage($sizeType);
     }
 
-    public function findOneByName(int $name): array
+    public function findOneByName(string $name): array
     {
         $sizeType = $this->entityManager->getRepository(SizeType::class)->findOneByName($name);
 

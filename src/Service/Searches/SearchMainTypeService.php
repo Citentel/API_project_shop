@@ -2,11 +2,11 @@
 
 namespace App\Service\Searches;
 
-use App\Entity\SexType;
+use App\Entity\MainType;
 use App\Service\GenerateResponseService;
 use Doctrine\ORM\EntityManagerInterface;
 
-class SearchSexTypeService
+class SearchMainTypeService
 {
     private GenerateResponseService $generateResponseService;
     private EntityManagerInterface $entityManager;
@@ -23,24 +23,24 @@ class SearchSexTypeService
 
     public function findOneById(int $id): array
     {
-        $sexType = $this->entityManager->getRepository(SexType::class)->findOneById($id);
+        $mainType = $this->entityManager->getRepository(MainType::class)->findOneById($id);
 
-        return $this->createMessage($sexType);
+        return $this->createMessage($mainType);
     }
 
     public function findOneByName(string $name): array
     {
-        $sexType = $this->entityManager->getRepository(SexType::class)->findOneByName($name);
+        $mainType = $this->entityManager->getRepository(MainType::class)->findOneByName($name);
 
-        return $this->createMessage($sexType);
+        return $this->createMessage($mainType);
     }
 
-    private function createMessage($sexType): array
+    private function createMessage($mainType): array
     {
-        if (!$sexType) {
-            return $this->generateResponseService->generateArrayResponse(404, 'sex type does not exist');
+        if (!$mainType) {
+            return $this->generateResponseService->generateArrayResponse(404, 'main type does not exist');
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'sex type exist', ['sexType' => $sexType]);
+        return $this->generateResponseService->generateArrayResponse(200, 'main type exist', ['mainType' => $mainType]);
     }
 }

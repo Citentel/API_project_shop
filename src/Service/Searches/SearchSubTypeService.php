@@ -2,11 +2,11 @@
 
 namespace App\Service\Searches;
 
-use App\Entity\SexType;
+use App\Entity\SubType;
 use App\Service\GenerateResponseService;
 use Doctrine\ORM\EntityManagerInterface;
 
-class SearchSexTypeService
+class SearchSubTypeService
 {
     private GenerateResponseService $generateResponseService;
     private EntityManagerInterface $entityManager;
@@ -23,24 +23,24 @@ class SearchSexTypeService
 
     public function findOneById(int $id): array
     {
-        $sexType = $this->entityManager->getRepository(SexType::class)->findOneById($id);
+        $subType = $this->entityManager->getRepository(SubType::class)->findOneById($id);
 
-        return $this->createMessage($sexType);
+        return $this->createMessage($subType);
     }
 
     public function findOneByName(string $name): array
     {
-        $sexType = $this->entityManager->getRepository(SexType::class)->findOneByName($name);
+        $subType = $this->entityManager->getRepository(SubType::class)->findOneByName($name);
 
-        return $this->createMessage($sexType);
+        return $this->createMessage($subType);
     }
 
-    private function createMessage($sexType): array
+    private function createMessage($subType): array
     {
-        if (!$sexType) {
-            return $this->generateResponseService->generateArrayResponse(404, 'sex type does not exist');
+        if (!$subType) {
+            return $this->generateResponseService->generateArrayResponse(404, 'sub type does not exist');
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'sex type exist', ['sexType' => $sexType]);
+        return $this->generateResponseService->generateArrayResponse(200, 'sub type exist', ['subType' => $subType]);
     }
 }

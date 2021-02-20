@@ -30,13 +30,14 @@ class MainType
     private $products;
 
     /**
-     * @ORM\ManyToOne(targetEntity=SubType::class, inversedBy="mainTypes")
+     * @ORM\OneToMany(targetEntity=SubType::class, mappedBy="mainType")
      */
     private $subTypes;
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->subTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -80,14 +81,32 @@ class MainType
         return $this;
     }
 
-    public function getSubTypes(): ?SubType
+    /**
+     * @return Collection|SubType[]
+     */
+    public function getSubTypes(): Collection
     {
         return $this->subTypes;
     }
 
-    public function setSubTypes(?SubType $subTypes): self
+    public function addSubType(SubType $subType): self
     {
-        $this->subTypes = $subTypes;
+        if (!$this->subTypes->contains($subType)) {
+            $this->subTypes[] = $subType;
+            $subType->setMainType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubType(SubType $subType): self
+    {
+        if ($this->subTypes->removeElement($subType)) {
+            // set the owning side to null (unless already changed)
+            if ($subType->getMainType() === $this) {
+                $subType->setMainType(null);
+            }
+        }
 
         return $this;
     }

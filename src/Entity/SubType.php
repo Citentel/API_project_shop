@@ -30,9 +30,9 @@ class SubType
     private $products;
 
     /**
-     * @ORM\OneToMany(targetEntity=MainType::class, mappedBy="subTypes")
+     * @ORM\ManyToOne(targetEntity=MainType::class, inversedBy="subTypes")
      */
-    private $mainTypes;
+    private $mainType;
 
     public function __construct()
     {
@@ -81,32 +81,14 @@ class SubType
         return $this;
     }
 
-    /**
-     * @return Collection|MainType[]
-     */
-    public function getMainTypes(): Collection
+    public function getMainType(): ?MainType
     {
-        return $this->mainTypes;
+        return $this->mainType;
     }
 
-    public function addMainType(MainType $mainType): self
+    public function setMainType(?MainType $mainType): self
     {
-        if (!$this->mainTypes->contains($mainType)) {
-            $this->mainTypes[] = $mainType;
-            $mainType->setSubTypes($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMainType(MainType $mainType): self
-    {
-        if ($this->mainTypes->removeElement($mainType)) {
-            // set the owning side to null (unless already changed)
-            if ($mainType->getSubTypes() === $this) {
-                $mainType->setSubTypes(null);
-            }
-        }
+        $this->mainType = $mainType;
 
         return $this;
     }
