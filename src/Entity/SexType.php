@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SexTypeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,9 +25,14 @@ class SexType
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Products::class, inversedBy="sexTypes")
+     * @ORM\ManyToMany(targetEntity=Products::class, mappedBy="sexTypes")
      */
     private $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,14 +51,29 @@ class SexType
         return $this;
     }
 
-    public function getProducts(): ?Products
+    /**
+     * @return Collection|Products[]
+     */
+    public function getProducts(): Collection
     {
         return $this->products;
     }
 
-    public function setProducts(?Products $products): self
+    public function addProduct(Products $product): self
     {
-        $this->products = $products;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->addSexType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Products $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            $product->removeSexType($this);
+        }
 
         return $this;
     }

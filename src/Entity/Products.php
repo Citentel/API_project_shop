@@ -32,22 +32,22 @@ class Products
     /**
      * @ORM\Column(type="integer")
      */
-    private $priceCrossed;
+    private ?int $priceCrossed;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $price;
+    private int $price;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $ammount;
+    private ?int $ammount;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $display;
+    private bool $display;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductsImages::class, mappedBy="products")
@@ -65,22 +65,22 @@ class Products
     private $subTypes;
 
     /**
-     * @ORM\OneToMany(targetEntity=SexType::class, mappedBy="products")
-     */
-    private $sexTypes;
-
-    /**
      * @ORM\ManyToMany(targetEntity=SizeType::class, mappedBy="products")
      */
     private $sizeTypes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=SexType::class, inversedBy="products")
+     */
+    private $sexTypes;
 
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->mainTypes = new ArrayCollection();
         $this->subTypes = new ArrayCollection();
-        $this->sexTypes = new ArrayCollection();
         $this->sizeTypes = new ArrayCollection();
+        $this->sexTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -172,18 +172,6 @@ class Products
         return $this;
     }
 
-    public function getSexType(): ?string
-    {
-        return $this->sexType;
-    }
-
-    public function setSexType(string $sexType): self
-    {
-        $this->sexType = $sexType;
-
-        return $this;
-    }
-
     /**
      * @return Collection|ProductsImages[]
      */
@@ -269,36 +257,6 @@ class Products
     }
 
     /**
-     * @return Collection|SexType[]
-     */
-    public function getSexTypes(): Collection
-    {
-        return $this->sexTypes;
-    }
-
-    public function addSexType(SexType $sexType): self
-    {
-        if (!$this->sexTypes->contains($sexType)) {
-            $this->sexTypes[] = $sexType;
-            $sexType->setProducts($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSexType(SexType $sexType): self
-    {
-        if ($this->sexTypes->removeElement($sexType)) {
-            // set the owning side to null (unless already changed)
-            if ($sexType->getProducts() === $this) {
-                $sexType->setProducts(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|SizeType[]
      */
     public function getSizeTypes(): Collection
@@ -321,6 +279,30 @@ class Products
         if ($this->sizeTypes->removeElement($sizeType)) {
             $sizeType->removeProduct($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SexType[]
+     */
+    public function getSexTypes(): Collection
+    {
+        return $this->sexTypes;
+    }
+
+    public function addSexType(SexType $sexType): self
+    {
+        if (!$this->sexTypes->contains($sexType)) {
+            $this->sexTypes[] = $sexType;
+        }
+
+        return $this;
+    }
+
+    public function removeSexType(SexType $sexType): self
+    {
+        $this->sexTypes->removeElement($sexType);
 
         return $this;
     }

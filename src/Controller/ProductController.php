@@ -20,8 +20,8 @@ class ProductController extends AbstractProduct
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['name', 'description', 'price_crossed', 'price', 'ammount', 'display', 'size', 'sex_type'])
-            ->setFieldsOptional(['main_type', 'sub_type'])
+            ->setFieldsRequired(['name', 'description', 'price', 'display'])
+            ->setFieldsOptional(['main_type', 'sub_type', 'size_type', 'sex_type', 'price_crossed', 'ammount'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -39,24 +39,53 @@ class ProductController extends AbstractProduct
         $product = (new Products())
             ->setName($data['name'])
             ->setDescription($data['description'])
-            ->setPriceCrossed($data['price_crossed'])
+            ->setPriceCrossed(isset($data['price_crossed']) ? $data['price_crossed'] : null)
             ->setPrice($data['price'])
-            ->setAmmount($data['ammount'])
             ->setDisplay($data['display']);
 
-        foreach ($data['size'] as $sizeType) {
-            $isSizeTypeExist = $this->searchSizeTypeService->findOneById($sizeType);
+        $ammount = isset($data['ammount']) ? $data['ammount'] : 0;
+        $ammount = $ammount < 0 ? 0 : $ammount;
 
-            if ($isSizeTypeExist['code'] === 200) {
-                $product->addSizeType($isSizeTypeExist['data']['sizeType']);
+        $product->setAmmount($ammount);
+
+        if (isset($data['size_type'])) {
+            foreach ($data['size'] as $sizeType) {
+                $isSizeTypeExist = $this->searchSizeTypeService->findOneById($sizeType);
+
+                if ($isSizeTypeExist['code'] === 200) {
+                    $product->addSizeType($isSizeTypeExist['data']['sizeType']);
+                }
             }
         }
 
-        foreach ($data['sex_type'] as $sexType) {
-            $isSexTypeExist = $this->searchSexTypeService->findOneById($sexType);
+        if (isset($data['sex_type'])) {
+            foreach ($data['sex_type'] as $sexType) {
+                $isSexTypeExist = $this->searchSexTypeService->findOneById($sexType);
 
-            if ($isSexTypeExist['code'] === 200) {
-                $product->addSexType($isSexTypeExist['data']['sexType']);
+                if ($isSexTypeExist['code'] === 200) {
+                    $product->addSexType($isSexTypeExist['data']['sexType']);
+                }
+            }
+        }
+
+        if (isset($data['main_type'])) {
+            foreach ($data['main_type'] as $mainType) {
+                $isMainTypeExist = $this->searchMainTypeService->findOneById($mainType);
+
+                if ($isMainTypeExist['code'] === 200) {
+                    $product->addMainType($isMainTypeExist['data']['mainType']);
+                }
+            }
+
+        }
+
+        if (isset($data['sub_type'])) {
+            foreach ($data['sub_type'] as $subType) {
+                $isSubTypeExist = $this->searchSubTypeService->findOneById($subType);
+
+                if ($isSubTypeExist['code'] === 200) {
+                    $product->addSubType($isSubTypeExist['data']['subType']);
+                }
             }
         }
 
