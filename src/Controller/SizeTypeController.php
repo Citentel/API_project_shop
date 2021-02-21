@@ -3,6 +3,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Products;
+use App\Entity\SexType;
 use App\Entity\SizeType;
 use App\Model\AbstractSizeType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -101,5 +103,48 @@ class SizeTypeController extends AbstractSizeType
         }
 
         return $this->generateResponseService->generateJsonResponse(200, 'return all size types', $sizeTypesResponse)['data'];
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/sizeType/getProducts", methods={"GET"})
+     */
+    public function getProductBySizeType(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isSizeTypeExist = $this->searchSizeTypeService->findOneById((int)$data['id']);
+
+        if ($isSizeTypeExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isSizeTypeExist['code'], $isSizeTypeExist['message'])['data'];
+        }
+
+        /** @var SizeType $sizeType */
+        $sizeType = $isSizeTypeExist['data']['sizeType'];
+
+        $products  = $sizeType->getProducts()->getValues();
+
+        if (empty($products)) {
+            return $this->generateResponseService->generateJsonResponse(404, 'database does not have product')['data'];
+        }
+
+        $productsResponse = [];
+
+        /** @var Products $product */
+        foreach ($products as $product) {
+            $productsResponse[] = $this->searchProductsService->generateResponseProduct($product);
+        }
+
+        return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];
     }
 }

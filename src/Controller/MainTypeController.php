@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\MainType;
+use App\Entity\Products;
 use App\Entity\SubType;
 use App\Model\AbstractMainType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -238,5 +239,48 @@ class MainTypeController extends AbstractMainType
         }
 
         return $this->generateResponseService->generateJsonResponse(200, 'return all sub types', $subTypesResponse)['data'];
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/mainType/getProducts", methods={"GET"})
+     */
+    public function getProductByMainType(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isMainTypeExist = $this->searchSubTypeService->findOneById((int)$data['id']);
+
+        if ($isMainTypeExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isMainTypeExist['code'], $isMainTypeExist['message'])['data'];
+        }
+
+        /** @var MainType $mainType */
+        $mainType = $isMainTypeExist['data']['mainType'];
+
+        $products  = $mainType->getProducts()->getValues();
+
+        if (empty($products)) {
+            return $this->generateResponseService->generateJsonResponse(404, 'database does not have product')['data'];
+        }
+
+        $productsResponse = [];
+
+        /** @var Products $product */
+        foreach ($products as $product) {
+            $productsResponse[] = $this->searchProductsService->generateResponseProduct($product);
+        }
+
+        return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];
     }
 }

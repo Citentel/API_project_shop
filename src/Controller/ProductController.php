@@ -306,59 +306,7 @@ class ProductController extends AbstractProduct
         /** @var Products $product */
         $product = $isProductExist['data']['product'];
 
-        $productResponse = [
-            'id' => $product->getId(),
-            'name' => $product->getName(),
-            'description' => $product->getDescription(),
-            'price_crossed' => $product->getPriceCrossed() ?? 0,
-            'price' => $product->getPrice() ?? 0,
-            'ammount' => $product->getAmmount(),
-            'display' => $product->getDisplay(),
-            'sex_type' => [],
-            'size_type' => [],
-            'main_type' => [],
-            'sub_type' => [],
-        ];
-
-        /** @var SexType $sexType */
-        if (!empty($product->getSexTypes()->getValues())) {
-            foreach ($product->getSexTypes()->getValues() as $sexType) {
-                $productResponse['sex_type'][] = [
-                    'id' => $sexType->getId(),
-                    'name' => $sexType->getName(),
-                ];
-            }
-        }
-
-        /** @var SizeType $sizeType */
-        if (!empty($product->getSizeTypes()->getValues())) {
-            foreach ($product->getSizeTypes()->getValues() as $sizeType) {
-                $productResponse['size_type'][] = [
-                    'id' => $sizeType->getId(),
-                    'name' => $sizeType->getName(),
-                ];
-            }
-        }
-
-        /** @var MainType $mainType */
-        if (!empty($product->getMainTypes()->getValues())) {
-            foreach ($product->getMainTypes()->getValues() as $mainType) {
-                $productResponse['main_type'][] = [
-                    'id' => $mainType->getId(),
-                    'name' => $mainType->getName(),
-                ];
-            }
-        }
-
-        /** @var SubType $subType */
-        if (!empty($product->getSubTypes()->getValues())) {
-            foreach ($product->getSubTypes()->getValues() as $subType) {
-                $productResponse['sub_type'][] = [
-                    'id' => $subType->getId(),
-                    'name' => $subType->getName(),
-                ];
-            }
-        }
+        $productResponse = $this->searchProductService->generateResponseProduct($product);
 
         return $this->generateResponseService->generateJsonResponse(200, 'return product', $productResponse)['data'];
     }
@@ -380,61 +328,7 @@ class ProductController extends AbstractProduct
 
         /** @var Products $product */
         foreach ($products as $product) {
-            $productResponse = [
-                'id' => $product->getId(),
-                'name' => $product->getName(),
-                'description' => $product->getDescription(),
-                'price_crossed' => $product->getPriceCrossed() ?? 0,
-                'price' => $product->getPrice() ?? 0,
-                'ammount' => $product->getAmmount(),
-                'display' => $product->getDisplay(),
-                'sex_type' => [],
-                'size_type' => [],
-                'main_type' => [],
-                'sub_type' => [],
-            ];
-
-            /** @var SexType $sexType */
-            if (!empty($product->getSexTypes()->getValues())) {
-                foreach ($product->getSexTypes()->getValues() as $sexType) {
-                    $productResponse['sex_type'][] = [
-                        'id' => $sexType->getId(),
-                        'name' => $sexType->getName(),
-                    ];
-                }
-            }
-
-            /** @var SizeType $sizeType */
-            if (!empty($product->getSizeTypes()->getValues())) {
-                foreach ($product->getSizeTypes()->getValues() as $sizeType) {
-                    $productResponse['size_type'][] = [
-                        'id' => $sizeType->getId(),
-                        'name' => $sizeType->getName(),
-                    ];
-                }
-            }
-
-            /** @var MainType $mainType */
-            if (!empty($product->getMainTypes()->getValues())) {
-                foreach ($product->getMainTypes()->getValues() as $mainType) {
-                    $productResponse['main_type'][] = [
-                        'id' => $mainType->getId(),
-                        'name' => $mainType->getName(),
-                    ];
-                }
-            }
-
-            /** @var SubType $subType */
-            if (!empty($product->getSubTypes()->getValues())) {
-                foreach ($product->getSubTypes()->getValues() as $subType) {
-                    $productResponse['sub_type'][] = [
-                        'id' => $subType->getId(),
-                        'name' => $subType->getName(),
-                    ];
-                }
-            }
-
-            $productsResponse[] = $productResponse;
+            $productsResponse[] = $this->searchProductService->generateResponseProduct($product);
         }
 
         return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];

@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Products;
 use App\Entity\SubType;
 use App\Model\AbstractSubType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -100,5 +101,48 @@ class SubTypeController extends AbstractSubType
         }
 
         return $this->generateResponseService->generateJsonResponse(200, 'return sub types', $responseSubTypes)['data'];
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/subType/getProducts", methods={"GET"})
+     */
+    public function getProductBySubType(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isSubTypeExist = $this->searchSubTypeService->findOneById((int)$data['id']);
+
+        if ($isSubTypeExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isSubTypeExist['code'], $isSubTypeExist['message'])['data'];
+        }
+
+        /** @var SubType $subType */
+        $subType = $isSubTypeExist['data']['subType'];
+
+        $products  = $subType->getProducts()->getValues();
+
+        if (empty($products)) {
+            return $this->generateResponseService->generateJsonResponse(404, 'database does not have product')['data'];
+        }
+
+        $productsResponse = [];
+
+        /** @var Products $product */
+        foreach ($products as $product) {
+            $productsResponse[] = $this->searchProductsService->generateResponseProduct($product);
+        }
+
+        return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];
     }
 }

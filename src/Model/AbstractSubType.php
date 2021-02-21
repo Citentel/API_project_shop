@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchProductsService;
 use App\Service\Searches\SearchSubTypeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,19 +16,22 @@ abstract class AbstractSubType
     protected GenerateResponseService $generateResponseService;
     protected SearchSubTypeService $searchSubTypeService;
     protected EntityManagerInterface $entityManager;
+    protected SearchProductsService $searchProductsService;
 
     public function __construct
     (
         CheckRequestService $checkRequestService,
         GenerateResponseService $generateResponseService,
         SearchSubTypeService $searchSubTypeService,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        SearchProductsService $searchProductsService
     )
     {
         $this->checkRequestService = $checkRequestService;
         $this->generateResponseService = $generateResponseService;
         $this->searchSubTypeService = $searchSubTypeService;
         $this->entityManager = $entityManager;
+        $this->searchProductsService = $searchProductsService;
     }
 
     abstract public function addSubType(Request $request): JsonResponse;
