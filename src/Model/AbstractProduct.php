@@ -50,6 +50,10 @@ abstract class AbstractProduct
 
     abstract public function updateProduct(Request $request): JsonResponse;
 
+    abstract public function addType(Request $request): JsonResponse;
+
+    abstract public function removeType(Request $request): JsonResponse;
+
     abstract public function getProduct(Request $request): JsonResponse;
 
     abstract public function getProducts(Request $request): JsonResponse;

@@ -160,18 +160,6 @@ class Products
         return $this;
     }
 
-    public function getSize(): ?string
-    {
-        return $this->size;
-    }
-
-    public function setSize(string $size): self
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
     /**
      * @return Collection|ProductsImages[]
      */
