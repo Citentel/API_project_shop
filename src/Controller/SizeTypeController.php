@@ -4,21 +4,47 @@
 namespace App\Controller;
 
 use App\Entity\Products;
-use App\Entity\SexType;
 use App\Entity\SizeType;
-use App\Model\AbstractSizeType;
+use App\Model\AbstractType;
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchProductsService;
+use App\Service\Searches\SearchSizeTypeService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SizeTypeController extends AbstractSizeType
+class SizeTypeController extends AbstractType
 {
+    protected CheckRequestService $checkRequestService;
+    protected GenerateResponseService $generateResponseService;
+    protected SearchSizeTypeService $searchSizeTypeService;
+    protected EntityManagerInterface $entityManager;
+    protected SearchProductsService $searchProductsService;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        SearchSizeTypeService $searchSizeTypeService,
+        EntityManagerInterface $entityManager,
+        SearchProductsService $searchProductsService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->searchSizeTypeService = $searchSizeTypeService;
+        $this->entityManager = $entityManager;
+        $this->searchProductsService = $searchProductsService;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
      * @Route("api/sizeType/add", methods={"POST"})
      */
-    public function addSizeType(Request $request): JsonResponse
+    public function addType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
@@ -51,7 +77,7 @@ class SizeTypeController extends AbstractSizeType
      * @return JsonResponse
      * @Route("api/sizeType/getOne", methods={"GET"})
      */
-    public function getSizeType(Request $request): JsonResponse
+    public function getType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
@@ -84,7 +110,7 @@ class SizeTypeController extends AbstractSizeType
      * @return JsonResponse
      * @Route("api/sizeType/getAll", methods={"GET"})
      */
-    public function getSizeTypes(Request $request): JsonResponse
+    public function getTypes(Request $request): JsonResponse
     {
         $sizeTypes = $this->entityManager->getRepository(SizeType::class)->findAll();
 
@@ -110,7 +136,7 @@ class SizeTypeController extends AbstractSizeType
      * @return JsonResponse
      * @Route("api/sizeType/getProducts", methods={"GET"})
      */
-    public function getProductBySizeType(Request $request): JsonResponse
+    public function getProductByType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)

@@ -7,18 +7,49 @@ use App\Entity\MainType;
 use App\Entity\Products;
 use App\Entity\SubType;
 use App\Model\AbstractMainType;
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchMainTypeService;
+use App\Service\Searches\SearchProductsService;
+use App\Service\Searches\SearchSubTypeService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainTypeController extends AbstractMainType
 {
+    protected CheckRequestService $checkRequestService;
+    protected GenerateResponseService $generateResponseService;
+    protected SearchMainTypeService $searchMainTypeService;
+    protected SearchSubTypeService $searchSubTypeService;
+    protected EntityManagerInterface $entityManager;
+    protected SearchProductsService $searchProductsService;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        SearchMainTypeService $searchMainTypeService,
+        SearchSubTypeService $searchSubTypeService,
+        EntityManagerInterface $entityManager,
+        SearchProductsService $searchProductsService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->searchMainTypeService = $searchMainTypeService;
+        $this->searchSubTypeService = $searchSubTypeService;
+        $this->entityManager = $entityManager;
+        $this->searchProductsService = $searchProductsService;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
      * @Route("api/mainType/add", methods={"POST"})
      */
-    public function addMainType(Request $request): JsonResponse
+    public function addType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
@@ -93,7 +124,7 @@ class MainTypeController extends AbstractMainType
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("api/mainType/removeSubType", methods={"PATCH"})
+     * @Route("api/mainType/removeSubType", methods={"DELETE"})
      */
     public function removeSubTypeFromMainType(Request $request): JsonResponse
     {
@@ -139,7 +170,7 @@ class MainTypeController extends AbstractMainType
      * @return JsonResponse
      * @Route("api/mainType/getOne", methods={"GET"})
      */
-    public function getMainType(Request $request): JsonResponse
+    public function getType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
@@ -174,7 +205,7 @@ class MainTypeController extends AbstractMainType
      * @return JsonResponse
      * @Route("api/mainType/getAll", methods={"GET"})
      */
-    public function getMainTypes(Request $request): JsonResponse
+    public function getTypes(Request $request): JsonResponse
     {
         $mainTypes = $this->entityManager->getRepository(MainType::class)->findAll();
 
@@ -246,7 +277,7 @@ class MainTypeController extends AbstractMainType
      * @return JsonResponse
      * @Route("api/mainType/getProducts", methods={"GET"})
      */
-    public function getProductByMainType(Request $request): JsonResponse
+    public function getProductByType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)

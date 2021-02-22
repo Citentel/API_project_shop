@@ -5,19 +5,46 @@ namespace App\Controller;
 
 use App\Entity\Products;
 use App\Entity\SubType;
-use App\Model\AbstractSubType;
+use App\Model\AbstractType;
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchProductsService;
+use App\Service\Searches\SearchSubTypeService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SubTypeController extends AbstractSubType
+class SubTypeController extends AbstractType
 {
+    protected CheckRequestService $checkRequestService;
+    protected GenerateResponseService $generateResponseService;
+    protected SearchSubTypeService $searchSubTypeService;
+    protected EntityManagerInterface $entityManager;
+    protected SearchProductsService $searchProductsService;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        SearchSubTypeService $searchSubTypeService,
+        EntityManagerInterface $entityManager,
+        SearchProductsService $searchProductsService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->searchSubTypeService = $searchSubTypeService;
+        $this->entityManager = $entityManager;
+        $this->searchProductsService = $searchProductsService;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
      * @Route("api/subType/add", methods={"POST"})
      */
-    public function addSubType(Request $request): JsonResponse
+    public function addType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
@@ -50,7 +77,7 @@ class SubTypeController extends AbstractSubType
      * @return JsonResponse
      * @Route("api/subType/getOne", methods={"GET"})
      */
-    public function getSubType(Request $request): JsonResponse
+    public function getType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
@@ -83,7 +110,7 @@ class SubTypeController extends AbstractSubType
      * @return JsonResponse
      * @Route("api/subType/getAll", methods={"GET"})
      */
-    public function getSubTypes(Request $request): JsonResponse
+    public function getTypes(Request $request): JsonResponse
     {
         $subTypes = $this->entityManager->getRepository(SubType::class)->findAll();
 
@@ -108,7 +135,7 @@ class SubTypeController extends AbstractSubType
      * @return JsonResponse
      * @Route("api/subType/getProducts", methods={"GET"})
      */
-    public function getProductBySubType(Request $request): JsonResponse
+    public function getProductByType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)

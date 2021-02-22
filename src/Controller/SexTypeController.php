@@ -4,19 +4,46 @@ namespace App\Controller;
 
 use App\Entity\Products;
 use App\Entity\SexType;
-use App\Model\AbstractSexType;
+use App\Model\AbstractType;
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchProductsService;
+use App\Service\Searches\SearchSexTypeService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SexTypeController extends AbstractSexType
+class SexTypeController extends AbstractType
 {
+    protected CheckRequestService $checkRequestService;
+    protected GenerateResponseService $generateResponseService;
+    protected SearchSexTypeService $searchSexTypeService;
+    protected EntityManagerInterface $entityManager;
+    protected SearchProductsService $searchProductsService;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        SearchSexTypeService $searchSexTypeService,
+        EntityManagerInterface $entityManager,
+        SearchProductsService $searchProductsService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->searchSexTypeService = $searchSexTypeService;
+        $this->entityManager = $entityManager;
+        $this->searchProductsService = $searchProductsService;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
      * @Route("api/sexType/add", methods={"POST"})
      */
-    public function addSexType(Request $request): JsonResponse
+    public function addType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
@@ -49,7 +76,7 @@ class SexTypeController extends AbstractSexType
      * @return JsonResponse
      * @Route("api/sexType/getOne", methods={"GET"})
      */
-    public function getSexType(Request $request): JsonResponse
+    public function getType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
@@ -82,7 +109,7 @@ class SexTypeController extends AbstractSexType
      * @return JsonResponse
      * @Route("api/sexType/getAll", methods={"GET"})
      */
-    public function getSexTypes(Request $request): JsonResponse
+    public function getTypes(Request $request): JsonResponse
     {
         $sexTypes = $this->entityManager->getRepository(SexType::class)->findAll();
 
@@ -108,7 +135,7 @@ class SexTypeController extends AbstractSexType
      * @return JsonResponse
      * @Route("api/sexType/getProducts", methods={"GET"})
      */
-    public function getProductBySexType(Request $request): JsonResponse
+    public function getProductByType(Request $request): JsonResponse
     {
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
