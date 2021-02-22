@@ -50,7 +50,7 @@ class Products
     private bool $display;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductsImages::class, mappedBy="products")
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="products")
      */
     private $images;
 
@@ -161,14 +161,14 @@ class Products
     }
 
     /**
-     * @return Collection|ProductsImages[]
+     * @return Collection|Images[]
      */
     public function getImages(): Collection
     {
         return $this->images;
     }
 
-    public function addImage(ProductsImages $image): self
+    public function addImage(Images $image): self
     {
         if (!$this->images->contains($image)) {
             $this->images[] = $image;
@@ -178,7 +178,7 @@ class Products
         return $this;
     }
 
-    public function removeImage(ProductsImages $image): self
+    public function removeImage(Images $image): self
     {
         if ($this->images->removeElement($image)) {
             // set the owning side to null (unless already changed)

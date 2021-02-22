@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductsImagesRepository;
+use App\Repository\ImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ProductsImagesRepository::class)
+ * @ORM\Entity(repositoryClass=ImagesRepository::class)
  */
-class ProductsImages
+class Images
 {
     /**
      * @ORM\Id

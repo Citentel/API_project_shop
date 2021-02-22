@@ -3,11 +3,7 @@
 
 namespace App\Controller;
 
-use App\Entity\MainType;
 use App\Entity\Products;
-use App\Entity\SexType;
-use App\Entity\SizeType;
-use App\Entity\SubType;
 use App\Model\AbstractProduct;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
