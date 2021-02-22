@@ -3,24 +3,10 @@
 namespace App\Service\Searches;
 
 use App\Entity\SexType;
-use App\Service\GenerateResponseService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Model\AbstractSearchService;
 
-class SearchSexTypeService
+class SearchSexTypeService extends AbstractSearchService
 {
-    private GenerateResponseService $generateResponseService;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct
-    (
-        GenerateResponseService $generateResponseService,
-        EntityManagerInterface $entityManager
-    )
-    {
-        $this->generateResponseService = $generateResponseService;
-        $this->entityManager = $entityManager;
-    }
-
     public function findOneById(int $id): array
     {
         $sexType = $this->entityManager->getRepository(SexType::class)->findOneById($id);
@@ -35,12 +21,12 @@ class SearchSexTypeService
         return $this->createMessage($sexType);
     }
 
-    private function createMessage($sexType): array
+    protected function createMessage($data): array
     {
-        if (!$sexType) {
+        if (!$data) {
             return $this->generateResponseService->generateArrayResponse(404, 'sex type does not exist');
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'sex type exist', ['sexType' => $sexType]);
+        return $this->generateResponseService->generateArrayResponse(200, 'sex type exist', ['sexType' => $data]);
     }
 }

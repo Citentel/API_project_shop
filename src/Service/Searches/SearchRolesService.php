@@ -3,24 +3,10 @@
 namespace App\Service\Searches;
 
 use App\Entity\Roles;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Service\GenerateResponseService;
+use App\Model\AbstractSearchService;
 
-class SearchRolesService
+class SearchRolesService extends AbstractSearchService
 {
-    private GenerateResponseService $generateResponseService;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct
-    (
-        GenerateResponseService $generateResponseService,
-        EntityManagerInterface $entityManager
-    )
-    {
-        $this->generateResponseService = $generateResponseService;
-        $this->entityManager = $entityManager;
-    }
-
     public function findOneById(int $id): array
     {
         $role = $this->entityManager->getRepository(Roles::class)->findOneById($id);
@@ -35,12 +21,12 @@ class SearchRolesService
         return $this->createMessage($role);
     }
 
-    private function createMessage($role): array
+    protected function createMessage($data): array
     {
-        if ($role === null) {
+        if ($data === null) {
             return $this->generateResponseService->generateArrayResponse(404, 'role does not exist');
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'role exist', ['role' => $role]);
+        return $this->generateResponseService->generateArrayResponse(200, 'role exist', ['role' => $data]);
     }
 }

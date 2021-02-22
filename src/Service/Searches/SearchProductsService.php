@@ -3,24 +3,10 @@
 namespace App\Service\Searches;
 
 use App\Entity\Products;
-use App\Service\GenerateResponseService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Model\AbstractSearchService;
 
-class SearchProductsService
+class SearchProductsService extends AbstractSearchService
 {
-    private GenerateResponseService $generateResponseService;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct
-    (
-        GenerateResponseService $generateResponseService,
-        EntityManagerInterface $entityManager
-    )
-    {
-        $this->generateResponseService = $generateResponseService;
-        $this->entityManager = $entityManager;
-    }
-
     public function findOneById(int $id): array
     {
         $product = $this->entityManager->getRepository(Products::class)->findOneById($id);
@@ -90,12 +76,12 @@ class SearchProductsService
         return $productResponse;
     }
 
-    private function createMessage($product): array
+    protected function createMessage($data): array
     {
-        if (!$product) {
+        if (!$data) {
             return $this->generateResponseService->generateArrayResponse(404, 'product does not exist');
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'product exist', ['product' => $product]);
+        return $this->generateResponseService->generateArrayResponse(200, 'product exist', ['product' => $data]);
     }
 }

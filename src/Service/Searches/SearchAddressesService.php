@@ -4,14 +4,13 @@ namespace App\Service\Searches;
 
 use App\Entity\Addresses;
 use App\Entity\Users;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Model\AbstractSearchService;
 use App\Service\GenerateResponseService;
+use Doctrine\ORM\EntityManagerInterface;
 
-class SearchAddressesService
+class SearchAddressesService extends AbstractSearchService
 {
-    private GenerateResponseService $generateResponseService;
-    private EntityManagerInterface $entityManager;
-    private SearchUsersService $searchUsersService;
+    protected SearchUsersService $searchUsersService;
 
     public function __construct
     (
@@ -20,10 +19,10 @@ class SearchAddressesService
         SearchUsersService $searchUsersService
     )
     {
-        $this->generateResponseService = $generateResponseService;
-        $this->entityManager = $entityManager;
-        $this->searchUsersService = $searchUsersService;
+        parent::__construct($generateResponseService, $entityManager);
+        $this->$searchUsersService = $searchUsersService;
     }
+
 
     public function findOneById(int $id): array
     {
@@ -43,12 +42,17 @@ class SearchAddressesService
         return $this->generateResponseService->generateArrayResponse(200, 'user addresses', $addresses);
     }
 
-    private function createMessage($address): array
+    protected function createMessage($data): array
     {
-        if ($address === null) {
+        if ($data === null) {
             return $this->generateResponseService->generateArrayResponse(404, 'address does not exist');
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'address exist', ['address' => $address]);
+        return $this->generateResponseService->generateArrayResponse(200, 'address exist', ['address' => $data]);
+    }
+
+    public function findOneByName(string $name): array
+    {
+        // TODO: Implement findOneByName() method.
     }
 }

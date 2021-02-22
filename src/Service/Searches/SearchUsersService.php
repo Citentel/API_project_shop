@@ -3,27 +3,13 @@
 namespace App\Service\Searches;
 
 use App\Entity\Users;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Service\GenerateResponseService;
+use App\Model\AbstractSearchService;
 
-class SearchUsersService
+class SearchUsersService extends AbstractSearchService
 {
-    private GenerateResponseService $generateResponseService;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct
-    (
-        GenerateResponseService $generateResponseService,
-        EntityManagerInterface $entityManager
-    )
+    public function findOneById(int $id): array
     {
-        $this->generateResponseService = $generateResponseService;
-        $this->entityManager = $entityManager;
-    }
-
-    public function findOneById(int $uid): array
-    {
-        $user = $this->entityManager->getRepository(Users::class)->findOneById($uid);
+        $user = $this->entityManager->getRepository(Users::class)->findOneById($id);
 
         return $this->createMessage($user);
     }
@@ -42,12 +28,17 @@ class SearchUsersService
         return $this->createMessage($user);
     }
 
-    private function createMessage($user): array
+    protected function createMessage($data): array
     {
-        if ($user === null) {
+        if ($data === null) {
             return $this->generateResponseService->generateArrayResponse(404, 'user does not exist');
         }
 
-        return $this->generateResponseService->generateArrayResponse(200, 'user exist', ['user' => $user]);
+        return $this->generateResponseService->generateArrayResponse(200, 'user exist', ['user' => $data]);
+    }
+
+    public function findOneByName(string $name): array
+    {
+        // TODO: Implement findOneByName() method.
     }
 }
