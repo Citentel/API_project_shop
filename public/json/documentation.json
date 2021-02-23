@@ -46,6 +46,11 @@
             "path": "api/user/changeData",
             "params": "{\"uid\": int, \"new_firstname\": ?string, \"new_lastname\": ?string, \"new_email\": ?string, \"new_password\": ?string}",
             "token": true
+          },
+          "ep4": {
+            "path": "api/user/updateRole",
+            "params": "{\"uid\": int, \"role_id\": int}",
+            "token": true
           }
         }
       }
@@ -330,6 +335,41 @@
           "ep2": {
             "path": "api/product/removeImage",
             "params": "{\"id\": int, \"image\": int}",
+            "token": true
+          }
+        }
+      }
+    },
+    "role": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/role/getOne",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/role/getAll",
+            "params": "",
+            "token": true
+          },
+          "ep3": {
+            "path": "api/role/getUsers",
+            "params": "?id=int",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/role/add",
+            "params": "{\"name\": string, \"cost\": int}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/role/update",
+            "params": "{\"id\": int, \"name\": ?string, \"cost\": ?int}",
             "token": true
           }
         }

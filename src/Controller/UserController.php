@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Roles;
 use App\Entity\Users;
 use App\Model\AbstractUser;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -487,5 +488,48 @@ class UserController extends AbstractUser
         $this->entityManager->flush();
 
         return $this->generateResponseService->generateJsonResponse(200, 'change email user')['data'];
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/user/updateRole", methods={"PATCH"})
+     */
+    public function updateRoleUser(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['uid', 'role_id'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isUserExist = $this->searchUsersService->findOneById($data['uid']);
+
+        if ($isUserExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isUserExist['code'], $isUserExist['message'])['data'];
+        }
+
+        /** @var Users $user */
+        $user = $isUserExist['data']['user'];
+
+        $isRoleExist = $this->searchRolesService->findOneById($data['role_id']);
+
+        if ($isRoleExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isRoleExist['code'], $isRoleExist['message'])['data'];
+        }
+
+        /** @var Roles $role */
+        $role = $isRoleExist['data']['role'];
+        $user->setRole($role);
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        return $this->generateResponseService->generateJsonResponse(200, 'updated role')['data'];
     }
 }

@@ -46,7 +46,6 @@ abstract class AbstractUser extends AbstractController
         $this->emailSendService = $emailSendService;
     }
 
-
     protected function changeFirstname(Users $user, string $newFirstname): array
     {
         $checkDataFromUser = $this->validatorUserDataService->checkFirstname($newFirstname);
