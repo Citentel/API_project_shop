@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Images;
 use App\Entity\Products;
 use App\Model\AbstractProduct;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -328,5 +329,93 @@ class ProductController extends AbstractProduct
         }
 
         return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/product/addImage", methods={"POST"})
+     */
+    public function addImage(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id', 'image'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isProductExist = $this->searchProductService->findOneById($data['id']);
+
+        if ($isProductExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isProductExist['code'], $isProductExist['message'])['data'];
+        }
+
+        /** @var Products $product */
+        $product = $isProductExist['data']['product'];
+
+        $isImageExist = $this->searchImageService->findOneById($data['image']);
+
+        if ($isImageExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isImageExist['code'], $isImageExist['message'])['data'];
+        }
+
+        /** @var Images $image */
+        $image = $isImageExist['data']['image'];
+
+        $product->addImage($image);
+
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        return $this->generateResponseService->generateJsonResponse(200, 'added image to product')['data'];
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/product/removeImage", methods={"DELETE"})
+     */
+    public function removeImage(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id', 'image'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isProductExist = $this->searchProductService->findOneById($data['id']);
+
+        if ($isProductExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isProductExist['code'], $isProductExist['message'])['data'];
+        }
+
+        /** @var Products $product */
+        $product = $isProductExist['data']['product'];
+
+        $isImageExist = $this->searchImageService->findOneById($data['image']);
+
+        if ($isImageExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isImageExist['code'], $isImageExist['message'])['data'];
+        }
+
+        /** @var Images $image */
+        $image = $isImageExist['data']['image'];
+
+        $product->removeImage($image);
+
+        $this->entityManager->persist($product);
+        $this->entityManager->flush();
+
+        return $this->generateResponseService->generateJsonResponse(200, 'removed image from product')['data'];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchImageService;
 use App\Service\Searches\SearchMainTypeService;
 use App\Service\Searches\SearchProductsService;
 use App\Service\Searches\SearchSexTypeService;
@@ -23,6 +24,7 @@ abstract class AbstractProduct
     protected SearchSexTypeService $searchSexTypeService;
     protected SearchMainTypeService $searchMainTypeService;
     protected SearchSubTypeService $searchSubTypeService;
+    protected SearchImageService $searchImageService;
 
     public function __construct
     (
@@ -33,7 +35,8 @@ abstract class AbstractProduct
         SearchSizeTypeService $searchSizeTypeService,
         SearchSexTypeService $searchSexTypeService,
         SearchMainTypeService $searchMainTypeService,
-        SearchSubTypeService $searchSubTypeService
+        SearchSubTypeService $searchSubTypeService,
+        SearchImageService $searchImageService
     )
     {
         $this->checkRequestService = $checkRequestService;
@@ -44,6 +47,7 @@ abstract class AbstractProduct
         $this->searchSexTypeService = $searchSexTypeService;
         $this->searchMainTypeService = $searchMainTypeService;
         $this->searchSubTypeService = $searchSubTypeService;
+        $this->searchImageService = $searchImageService;
     }
 
     abstract public function createProduct(Request $request): JsonResponse;
@@ -53,6 +57,10 @@ abstract class AbstractProduct
     abstract public function addType(Request $request): JsonResponse;
 
     abstract public function removeType(Request $request): JsonResponse;
+
+    abstract public function addImage(Request $request): JsonResponse;
+
+    abstract public function removeImage(Request $request): JsonResponse;
 
     abstract public function getProduct(Request $request): JsonResponse;
 
