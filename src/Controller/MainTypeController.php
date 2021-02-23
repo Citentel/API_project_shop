@@ -314,4 +314,45 @@ class MainTypeController extends AbstractMainType
 
         return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/mainType/update", methods={"PATCH"})
+     */
+    public function updateType(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id', 'name'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isMainTypeExist = $this->searchMainTypeService->findOneByName($data['name']);
+
+        if ($isMainTypeExist['code'] === 200) {
+            return $this->generateResponseService->generateJsonResponse(409, 'main type with name (' . $data['name'] . ') exist in database')['data'];
+        }
+
+        $isMainTypeExist = $this->searchMainTypeService->findOneById($data['id']);
+
+        if ($isMainTypeExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isMainTypeExist['code'], $isMainTypeExist['message'])['data'];
+        }
+
+        /** @var MainType $mainType */
+        $mainType = $isMainTypeExist['data']['mainType'];
+
+        $mainType->setName($data['name']);
+
+        $this->entityManager->persist($mainType);
+        $this->entityManager->flush();
+
+        return $this->generateResponseService->generateJsonResponse(200, 'main type updated')['data'];
+    }
 }

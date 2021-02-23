@@ -172,4 +172,45 @@ class SubTypeController extends AbstractType
 
         return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/subType/update", methods={"PATCH"})
+     */
+    public function updateType(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id', 'name'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isSubTypeExist = $this->searchSubTypeService->findOneByName($data['name']);
+
+        if ($isSubTypeExist['code'] === 200) {
+            return $this->generateResponseService->generateJsonResponse(409, 'sub type with name (' . $data['name'] . ') exist in database')['data'];
+        }
+
+        $isSubTypeExist = $this->searchSubTypeService->findOneById($data['id']);
+
+        if ($isSubTypeExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isSubTypeExist['code'], $isSubTypeExist['message'])['data'];
+        }
+
+        /** @var SubType $subType */
+        $subType = $isSubTypeExist['data']['subType'];
+
+        $subType->setName($data['name']);
+
+        $this->entityManager->persist($subType);
+        $this->entityManager->flush();
+
+        return $this->generateResponseService->generateJsonResponse(200, 'sub type updated')['data'];
+    }
 }

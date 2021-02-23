@@ -1,0 +1,339 @@
+{
+  "api": {
+    "user": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/user/get/single",
+            "params": "?uid=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/user/get/all",
+            "params": "",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/user/register",
+            "params": "{\"firstname\": string, \"lastname\": string, \"email\": string, \"password\": string}",
+            "token": false
+          },
+          "ep2": {
+            "path": "api/user/restartCode",
+            "params": "{\"email\": string}\n",
+            "token": false
+          },
+          "ep3": {
+            "path": "api/user/checkArchivedEmail",
+            "params": "{\"firstname\": string, \"lastname\": string, \"email\": string, \"password\": string}",
+            "token": false
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/user/checkArchivedEmail",
+            "params": "{\"uid\": int, \"vc\": string}",
+            "token": false
+          },
+          "ep2": {
+            "path": "api/user/restartPassword",
+            "params": "{\"email\": string, \"rc\": string}",
+            "token": false
+          },
+          "ep3": {
+            "path": "api/user/changeData",
+            "params": "{\"uid\": int, \"new_firstname\": ?string, \"new_lastname\": ?string, \"new_email\": ?string, \"new_password\": ?string}",
+            "token": true
+          }
+        }
+      }
+    },
+    "address": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/address/getForUser",
+            "params": "?uid=int",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/address/add",
+            "params": "{\"uid\": int, \"country\": string, \"city\": string, \"street\": string, \"home_number\": int, \"premises_number\": int, \"zip\": int, \"display\": ?bool}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/address/changeData",
+            "params": "{\"address_id\": int, \"uid\": int, \"new_country\": ?string, \"new_city\": ?string, \"new_street\": ?string, \"new_home_number\": ?int, \"new_premises_number\": ?int, \"new_zip\": ?int, \"new_display\": ?bool}",
+            "token": true
+          }
+        }
+      }
+    },
+    "country": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/country/get/one",
+            "params": "?uid=int || ?code=string || ?name=string",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/country/get/all",
+            "params": "",
+            "token": true
+          }
+        }
+      }
+    },
+    "image": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/image/getOne",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/image/getAll",
+            "params": "",
+            "token": true
+          },
+          "ep3": {
+            "path": "api/image/getByProduct",
+            "params": "?id=int",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/image/add",
+            "params": "{\"name\": string, \"image\": string|base64, \"display\": ?bool}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/image/updat",
+            "params": "{\"id\": int, \"name\": ?string, \"display\": ?bool}",
+            "token": true
+          }
+        }
+      }
+    },
+    "main type": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/mainType/getOne",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/mainType/getAll",
+            "params": "",
+            "token": true
+          },
+          "ep3": {
+            "path": "api/mainType/getSubTypes",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep4": {
+            "path": "api/mainType/getProducts",
+            "params": "?id=int",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/mainType/add",
+            "params": "{\"name\": string}",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/mainType/addSubType",
+            "params": "{\"main_type_id\": int, \"sub_type_id\": int}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/mainType/update",
+            "params": "{\"id\": int, \"name\": string}",
+            "token": true
+          }
+        },
+        "delete": {
+          "ep1": {
+            "path": "api/mainType/removeSubType",
+            "params": "{\"main_type_id\": int, \"sub_type_id\": int}",
+            "token": true
+          }
+        }
+      }
+    },
+    "sub type": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/subType/getOne",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/subType/getAll",
+            "params": "",
+            "token": true
+          },
+          "ep3": {
+            "path": "api/subType/getProducts",
+            "params": "?id=int",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/subType/add",
+            "params": "{\"name\": string}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/subType/update",
+            "params": "{\"id\": int, \"name\": string}",
+            "token": true
+          }
+        }
+      }
+    },
+    "sex type": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/sexType/getOne",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/sexType/getAll",
+            "params": "",
+            "token": true
+          },
+          "ep3": {
+            "path": "api/sexType/getProducts",
+            "params": "?id=int",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/sexType/add",
+            "params": "{\"name\": string}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/sexType/update",
+            "params": "{\"id\": int, \"name\": string}",
+            "token": true
+          }
+        }
+      }
+    },
+    "size type": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/sizeType/getOne",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/sizeType/getAll",
+            "params": "",
+            "token": true
+          },
+          "ep3": {
+            "path": "api/sizeType/getProducts",
+            "params": "?id=int",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/sizeType/add",
+            "params": "{\"name\": string}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/sizeType/update",
+            "params": "{\"id\": int, \"name\": string}",
+            "token": true
+          }
+        }
+      }
+    },
+    "product": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/product/getOne",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/product/getAll",
+            "params": "",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/product/add",
+            "params": "{\"name\": string, \"description\": string, \"price\": int, \"price_crossed\": ?int, \"ammount\": ?int}",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/product/addType",
+            "params": "{\"id\": int, \"sex_type_id\": ?int, \"size_type_id\": ?int, \"main_type_id\": ?int, \"sub_type_id\": ?int}",
+            "token": true
+          },
+          "ep3": {
+            "path": "api/product/addImage",
+            "params": "{\"id\": int, \"image\": int}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/product/update",
+            "params": "{\"id\": int, \"name\": ?string, \"description\": ?string, \"price\": ?int, \"price_crossed\": ?int, \"ammount\": ?int}",
+            "token": true
+          }
+        },
+        "delete": {
+          "ep1": {
+            "path": "api/product/removeType",
+            "params": "{\"id\": int, \"sex_type_id\": ?int, \"size_type_id\": ?int, \"main_type_id\": ?int, \"sub_type_id\": ?int}",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/product/removeImage",
+            "params": "{\"id\": int, \"image\": int}",
+            "token": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -173,4 +173,45 @@ class SizeTypeController extends AbstractType
 
         return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/sexType/update", methods={"PATCH"})
+     */
+    public function updateType(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id', 'name'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isSizeTypeExist = $this->searchSizeTypeService->findOneByName($data['name']);
+
+        if ($isSizeTypeExist['code'] === 200) {
+            return $this->generateResponseService->generateJsonResponse(409, 'size type with name (' . $data['name'] . ') exist in database')['data'];
+        }
+
+        $isSizeTypeExist = $this->searchSizeTypeService->findOneById($data['id']);
+
+        if ($isSizeTypeExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isSizeTypeExist['code'], $isSizeTypeExist['message'])['data'];
+        }
+
+        /** @var SizeType $sizeType */
+        $sizeType = $isSizeTypeExist['data']['sizeType'];
+
+        $sizeType->setName($data['name']);
+
+        $this->entityManager->persist($sizeType);
+        $this->entityManager->flush();
+
+        return $this->generateResponseService->generateJsonResponse(200, 'size type updated')['data'];
+    }
 }

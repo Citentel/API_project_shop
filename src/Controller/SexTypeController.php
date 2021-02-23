@@ -172,4 +172,45 @@ class SexTypeController extends AbstractType
 
         return $this->generateResponseService->generateJsonResponse(200, 'return products', $productsResponse)['data'];
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("api/sexType/update", methods={"PATCH"})
+     */
+    public function updateType(Request $request): JsonResponse
+    {
+        $checkRequest = $this->checkRequestService
+            ->setRequest($request)
+            ->setFieldsRequired(['id', 'name'])
+            ->checker();
+
+        if ($checkRequest['code'] !== 200) {
+            return $checkRequest['data'];
+        }
+
+        $data = $checkRequest['data'];
+
+        $isSexTypeExist = $this->searchSexTypeService->findOneByName($data['name']);
+
+        if ($isSexTypeExist['code'] === 200) {
+            return $this->generateResponseService->generateJsonResponse(409, 'sex type with name (' . $data['name'] . ') exist in database')['data'];
+        }
+
+        $isSexTypeExist = $this->searchSexTypeService->findOneById($data['id']);
+
+        if ($isSexTypeExist['code'] !== 200) {
+            return $this->generateResponseService->generateJsonResponse($isSexTypeExist['code'], $isSexTypeExist['message'])['data'];
+        }
+
+        /** @var SexType $sexType */
+        $sexType = $isSexTypeExist['data']['sexType'];
+
+        $sexType->setName($data['name']);
+
+        $this->entityManager->persist($sexType);
+        $this->entityManager->flush();
+
+        return $this->generateResponseService->generateJsonResponse(200, 'sex type updated')['data'];
+    }
 }

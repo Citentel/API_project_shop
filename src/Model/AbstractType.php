@@ -14,4 +14,6 @@ abstract class AbstractType
     abstract public function getTypes(Request $request): JsonResponse;
 
     abstract public function getProductByType(Request $request): JsonResponse;
+
+    abstract public function updateType(Request $request): JsonResponse;
 }
