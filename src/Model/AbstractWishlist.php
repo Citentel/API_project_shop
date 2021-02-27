@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Model;
+
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchProductsService;
+use App\Service\Searches\SearchUsersService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+
+abstract class AbstractWishlist
+{
+    protected CheckRequestService $checkRequestService;
+    protected GenerateResponseService $generateResponseService;
+    protected SearchUsersService $searchUsersService;
+    protected SearchProductsService $searchProductsService;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        SearchUsersService $searchUsersService,
+        SearchProductsService $searchProductsService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->searchUsersService = $searchUsersService;
+        $this->searchProductsService = $searchProductsService;
+    }
+
+    abstract public function addList(Request $request): JsonResponse;
+
+    abstract public function removeList(Request $request): JsonResponse;
+
+    abstract public function clearList(Request $request): JsonResponse;
+
+    abstract public function addProduct(Request $request): JsonResponse;
+
+    abstract public function removeProduct(Request $request): JsonResponse;
+
+    abstract public function getList(Request $request): JsonResponse;
+}
