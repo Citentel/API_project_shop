@@ -74,6 +74,11 @@ class Products
      */
     private $sexTypes;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Wishlist::class, inversedBy="products")
+     */
+    private $wishlist;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -291,6 +296,18 @@ class Products
     public function removeSexType(SexType $sexType): self
     {
         $this->sexTypes->removeElement($sexType);
+
+        return $this;
+    }
+
+    public function getWishlist(): ?Wishlist
+    {
+        return $this->wishlist;
+    }
+
+    public function setWishlist(?Wishlist $wishlist): self
+    {
+        $this->wishlist = $wishlist;
 
         return $this;
     }
