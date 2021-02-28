@@ -374,6 +374,48 @@
           }
         }
       }
+    },
+    "wishlist": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/wishlist/get",
+            "params": "?uid=int&wishlist_id=int",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/wishlist/add",
+            "params": "{\"uid\": int, \"name\": string}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/wishlist/clear",
+            "params": "{\"uid\": int, \"wishlist_id\": int}",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/wishlist/addProduct",
+            "params": "{\"uid\": int, \"wishlist_id\": int, \"product_id\": int}",
+            "token": true
+          }
+        },
+        "delete": {
+          "ep1": {
+            "path": "api/wishlist/remove",
+            "params": "{\"uid\": int, \"wishlist_id\": int}",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/wishlist/removeProduct",
+            "params": "{\"uid\": int, \"wishlist_id\": int, \"product_id\": int}",
+            "token": true
+          }
+        }
+      }
     }
   }
 }
