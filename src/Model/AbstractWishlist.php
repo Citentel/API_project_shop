@@ -6,6 +6,8 @@ use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchProductsService;
 use App\Service\Searches\SearchUsersService;
+use App\Service\Searches\SearchWishlistService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,19 +17,25 @@ abstract class AbstractWishlist
     protected GenerateResponseService $generateResponseService;
     protected SearchUsersService $searchUsersService;
     protected SearchProductsService $searchProductsService;
+    protected SearchWishlistService $searchWishlistService;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct
     (
         CheckRequestService $checkRequestService,
         GenerateResponseService $generateResponseService,
         SearchUsersService $searchUsersService,
-        SearchProductsService $searchProductsService
+        SearchProductsService $searchProductsService,
+        SearchWishlistService $searchWishlistService,
+        EntityManagerInterface $entityManager
     )
     {
         $this->checkRequestService = $checkRequestService;
         $this->generateResponseService = $generateResponseService;
         $this->searchUsersService = $searchUsersService;
         $this->searchProductsService = $searchProductsService;
+        $this->searchWishlistService = $searchWishlistService;
+        $this->entityManager = $entityManager;
     }
 
     abstract public function addList(Request $request): JsonResponse;
