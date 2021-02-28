@@ -26,7 +26,7 @@ class AddressController extends AbstractAddress
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid', 'country', 'city', 'street', 'home_number', 'premises_number', 'zip'])
+            ->setFieldsRequired(['country', 'city', 'street', 'home_number', 'premises_number', 'zip'])
             ->setFieldsOptional(['display'])
             ->checker();
 
@@ -36,16 +36,8 @@ class AddressController extends AbstractAddress
 
         $data = $checkRequest['data'];
 
-        $isUserExist = $this->searchUsersService->findOneById($data['uid']);
-
-        if ($isUserExist['code'] !== 200) {
-            return $this->generateResponseService->generateJsonResponse(500, 'something goes wrong')['data'];
-        }
-
         /** @var Users $user */
-        $user = $isUserExist['data']['user'];
-
-        unset($data['uid']);
+        $user = $data['access_user'];
 
         $validFields = $this->validatorAddressesService->checkFullyAddressUser($data);
 
@@ -92,7 +84,6 @@ class AddressController extends AbstractAddress
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -101,14 +92,8 @@ class AddressController extends AbstractAddress
 
         $data = $checkRequest['data'];
 
-        $isUserExist = $this->searchUsersService->findOneById($data['uid']);
-
-        if ($isUserExist['code'] !== 200) {
-            return $this->generateResponseService->generateJsonResponse(500, 'something goes wrong')['data'];
-        }
-
         /** @var Users $user */
-        $user = $isUserExist['data']['user'];
+        $user = $data['access_user'];
 
         $userAddresses = $this->searchAddressesService->findByUser($user);
 
@@ -156,7 +141,7 @@ class AddressController extends AbstractAddress
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['address_id', 'uid'])
+            ->setFieldsRequired(['address_id'])
             ->setFieldsOptional(['new_country', 'new_city', 'new_street', 'new_home_number', 'new_premises_number', 'new_zip', 'new_display'])
             ->checker();
 
@@ -166,14 +151,8 @@ class AddressController extends AbstractAddress
 
         $data = $checkRequest['data'];
 
-        $isUserExist = $this->searchUsersService->findOneById($data['uid']);
-
-        if ($isUserExist['code'] !== 200) {
-            return $this->generateResponseService->generateJsonResponse(404, 'user is not exist')['data'];
-        }
-
         /** @var Users $user */
-        $user = $isUserExist['data']['user'];
+        $user = $data['access_user'];
 
         $userAddresses = $user->getAddresses()->getValues();
 

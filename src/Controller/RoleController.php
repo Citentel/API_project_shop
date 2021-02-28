@@ -169,6 +169,12 @@ class RoleController extends AbstractRole
      */
     public function getUsersByRole(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['id'])

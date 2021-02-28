@@ -294,7 +294,6 @@ class UserController extends AbstractUser
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid'])
             ->setFieldsOptional(['new_firstname', 'new_lastname', 'new_email', 'new_password'])
             ->checker();
 
@@ -304,14 +303,8 @@ class UserController extends AbstractUser
 
         $data = $checkRequest['data'];
 
-        $isUserExist = $this->searchUsersService->findOneById($data['uid']);
-
-        if ($isUserExist['code'] !== 200) {
-            return $this->generateResponseService->generateJsonResponse(404, 'user is not exist')['data'];
-        }
-
         /** @var Users $user */
-        $user = $isUserExist['data']['user'];
+        $user = $data['access_user'];
 
         if (isset($data['new_firstname'])) {
             $isChanged = $this->changeFirstname($user, $data['new_firstname']);
@@ -517,7 +510,7 @@ class UserController extends AbstractUser
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid', 'role_id'])
+            ->setFieldsRequired(['role_id'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -526,14 +519,8 @@ class UserController extends AbstractUser
 
         $data = $checkRequest['data'];
 
-        $isUserExist = $this->searchUsersService->findOneById($data['uid']);
-
-        if ($isUserExist['code'] !== 200) {
-            return $this->generateResponseService->generateJsonResponse($isUserExist['code'], $isUserExist['message'])['data'];
-        }
-
         /** @var Users $user */
-        $user = $isUserExist['data']['user'];
+        $user = $data['access_user'];
 
         $isRoleExist = $this->searchRolesService->findOneById($data['role_id']);
 

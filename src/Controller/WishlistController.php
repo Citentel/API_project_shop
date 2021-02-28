@@ -36,14 +36,8 @@ class WishlistController extends AbstractWishlist
 
         $data = $checkRequest['data'];
 
-        $isUserExist = $this->searchUsersService->findOneById($data['uid']);
-
-        if ($isUserExist['code'] !== 200) {
-            return $this->generateResponseService->generateJsonResponse($isUserExist['code'], $isUserExist['message'])['data'];
-        }
-
         /** @var Users $user */
-        $user = $isUserExist['data']['user'];
+        $user = $data['access_user'];
 
         $isUserHaveWishlist = $this->searchWishlistService->findOneByUser($user);
 
@@ -76,7 +70,7 @@ class WishlistController extends AbstractWishlist
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid', 'wishlist_id'])
+            ->setFieldsRequired(['wishlist_id'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -91,7 +85,7 @@ class WishlistController extends AbstractWishlist
             return $this->generateResponseService->generateJsonResponse($isWishlistExist['code'], $isWishlistExist['message'])['data'];
         }
 
-        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], (int)$data['uid']);
+        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], $data['access_user']);
 
         if ($isUserHaveAccess['code'] !== 200) {
             return $isUserHaveAccess['data'];
@@ -130,7 +124,7 @@ class WishlistController extends AbstractWishlist
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid', 'wishlist_id'])
+            ->setFieldsRequired(['wishlist_id'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -145,7 +139,7 @@ class WishlistController extends AbstractWishlist
             return $this->generateResponseService->generateJsonResponse($isWishlistExist['code'], $isWishlistExist['message'])['data'];
         }
 
-        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], (int)$data['uid']);
+        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], $data['access_user']);
 
         if ($isUserHaveAccess['code'] !== 200) {
             return $isUserHaveAccess['data'];
@@ -184,7 +178,7 @@ class WishlistController extends AbstractWishlist
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid', 'wishlist_id', 'product_id'])
+            ->setFieldsRequired(['wishlist_id', 'product_id'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -199,7 +193,7 @@ class WishlistController extends AbstractWishlist
             return $this->generateResponseService->generateJsonResponse($isWishlistExist['code'], $isWishlistExist['message'])['data'];
         }
 
-        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], (int)$data['uid']);
+        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], $data['access_user']);
 
         if ($isUserHaveAccess['code'] !== 200) {
             return $isUserHaveAccess['data'];
@@ -240,7 +234,7 @@ class WishlistController extends AbstractWishlist
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid', 'wishlist_id', 'product_id'])
+            ->setFieldsRequired(['wishlist_id', 'product_id'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -255,7 +249,7 @@ class WishlistController extends AbstractWishlist
             return $this->generateResponseService->generateJsonResponse($isWishlistExist['code'], $isWishlistExist['message'])['data'];
         }
 
-        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], (int)$data['uid']);
+        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], $data['access_user']);
 
         if ($isUserHaveAccess['code'] !== 200) {
             return $isUserHaveAccess['data'];
@@ -296,7 +290,7 @@ class WishlistController extends AbstractWishlist
 
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid', 'wishlist_id'])
+            ->setFieldsRequired(['wishlist_id'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -311,7 +305,7 @@ class WishlistController extends AbstractWishlist
             return $this->generateResponseService->generateJsonResponse($isWishlistExist['code'], $isWishlistExist['message'])['data'];
         }
 
-        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], (int)$data['uid']);
+        $isUserHaveAccess = $this->accessUserToWishlist($isWishlistExist['data']['wishlist'], $data['access_user']);
 
         if ($isUserHaveAccess['code'] !== 200) {
             return $isUserHaveAccess['data'];
@@ -339,9 +333,9 @@ class WishlistController extends AbstractWishlist
         return $this->generateResponseService->generateJsonResponse(200, 'return wishlist', $wishlistResponse)['data'];
     }
 
-    private function accessUserToWishlist(Wishlist $wishlist, int $uid): array
+    private function accessUserToWishlist(Wishlist $wishlist, Users $user): array
     {
-        if ($wishlist->getUser()->getId() !== $uid) {
+        if ($wishlist->getUser()->getId() !== $user->getId() ) {
             return $this->generateResponseService->generateJsonResponse(409, 'user does not have access for this wishlist');
         }
 
