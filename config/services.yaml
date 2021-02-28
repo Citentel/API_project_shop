@@ -55,5 +55,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTExpired }
 
+    acme_api.event.jwt_decoded_listener:
+        class: App\EventListener\AuthenticationListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
+
     App\Model\EmailPrepareModel:
         arguments: ['%app_email%']

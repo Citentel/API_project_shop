@@ -4,17 +4,33 @@
 namespace App\EventListener;
 
 use App\Entity\Users;
+use App\Service\Searches\SearchUsersService;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationFailureEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTExpiredEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthenticationListener
 {
+    private RequestStack $requestStack;
+    private SearchUsersService $searchUsersService;
+
+    public function __construct
+    (
+        RequestStack $requestStack,
+        SearchUsersService $searchUsersService
+    )
+    {
+        $this->requestStack = $requestStack;
+        $this->searchUsersService = $searchUsersService;
+    }
+
     public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
     {
         $data = $event->getData();
@@ -93,5 +109,16 @@ class AuthenticationListener
         $response = $event->getResponse();
 
         $response->setMessage('Your token is expired, please renew it.');
+    }
+
+    public function onJWTDecoded(JWTDecodedEvent $event): void
+    {
+        $eventUsername = $event->getPayload()['username'];
+        $request = $this->requestStack->getCurrentRequest();
+
+        /** @var Users $user */
+        $user = $this->searchUsersService->findOneByEmail($eventUsername)['data']['user'];
+
+        $request->request->set('access_user', $user);
     }
 }

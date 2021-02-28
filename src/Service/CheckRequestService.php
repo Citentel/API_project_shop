@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Users;
 use Symfony\Component\HttpFoundation\Request;
 
 class CheckRequestService
@@ -59,6 +60,8 @@ class CheckRequestService
 
         $acceptedKeys = $this->array_optional_keys($this->fieldsOptional, $requestDecode);
 
+        $acceptedKeys = $this->addAccessUidIntoResponse($acceptedKeys);
+
         return $this->generateResponseService->generateArrayResponse(200, 'looks good', $acceptedKeys);
     }
 
@@ -102,5 +105,19 @@ class CheckRequestService
         }
 
         return json_decode($this->request->getContent(), true);
+    }
+
+    private function addAccessUidIntoResponse(array $acceptedKeys): array
+    {
+        /** @var null|Users $accessUser */
+        $accessUser = $this->request->get('access_user');
+
+        if (!$this->request->get('access_user')) {
+            return $acceptedKeys;
+        }
+
+        $acceptedKeys['access_user'] = $accessUser;
+
+        return $acceptedKeys;
     }
 }
