@@ -237,6 +237,12 @@ class UserController extends AbstractUser
      */
     public function deleteUser(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid'])
@@ -280,6 +286,12 @@ class UserController extends AbstractUser
      */
     public function changeDataUser(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid'])
@@ -359,7 +371,7 @@ class UserController extends AbstractUser
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("api/user/get/single", methods={"GET"})
+     * @Route("api/user/getOne", methods={"GET"})
      */
     public function getSingleUser(Request $request): JsonResponse
     {
@@ -400,7 +412,7 @@ class UserController extends AbstractUser
 
     /**
      * @return JsonResponse
-     * @Route("api/user/get/all", methods={"GET"})
+     * @Route("api/user/getAll", methods={"GET"})
      */
     public function getAllUsers(): JsonResponse
     {
@@ -497,6 +509,12 @@ class UserController extends AbstractUser
      */
     public function updateRoleUser(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid', 'role_id'])

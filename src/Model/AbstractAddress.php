@@ -3,16 +3,20 @@
 namespace App\Model;
 
 use App\Entity\Addresses;
+use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchAddressesService;
 use App\Service\Searches\SearchCountriesService;
 use App\Service\Searches\SearchUsersService;
 use App\Service\Validators\ValidatorAddressesService;
+use App\Traits\accessTrait;
 use Doctrine\ORM\EntityManagerInterface;
 
 abstract class AbstractAddress
 {
+    use accessTrait;
+
     protected CheckRequestService $checkRequestService;
     protected GenerateResponseService $generateResponseService;
     protected SearchUsersService $searchUsersService;
@@ -29,7 +33,8 @@ abstract class AbstractAddress
         SearchAddressesService $searchAddressesService,
         SearchCountriesService $searchCountriesService,
         EntityManagerInterface $entityManager,
-        ValidatorAddressesService $validatorAddressesService
+        ValidatorAddressesService $validatorAddressesService,
+        CheckPrivilegesService $checkPrivilegesService
     )
     {
         $this->checkRequestService = $checkRequestService;
@@ -39,6 +44,7 @@ abstract class AbstractAddress
         $this->searchCountriesService = $searchCountriesService;
         $this->entityManager = $entityManager;
         $this->validatorAddressesService = $validatorAddressesService;
+        $this->checkPrivilegesService = $checkPrivilegesService;
     }
 
     protected function changeCountry(Addresses $address, string $newCountry): array

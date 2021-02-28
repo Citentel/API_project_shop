@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Products;
 use App\Entity\SexType;
 use App\Model\AbstractType;
+use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchProductsService;
@@ -28,9 +29,11 @@ class SexTypeController extends AbstractType
         GenerateResponseService $generateResponseService,
         SearchSexTypeService $searchSexTypeService,
         EntityManagerInterface $entityManager,
-        SearchProductsService $searchProductsService
+        SearchProductsService $searchProductsService,
+        CheckPrivilegesService $checkPrivilegesService
     )
     {
+        parent::__construct($checkPrivilegesService);
         $this->checkRequestService = $checkRequestService;
         $this->generateResponseService = $generateResponseService;
         $this->searchSexTypeService = $searchSexTypeService;
@@ -45,6 +48,12 @@ class SexTypeController extends AbstractType
      */
     public function addType(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['name'])
@@ -180,6 +189,12 @@ class SexTypeController extends AbstractType
      */
     public function updateType(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['id', 'name'])

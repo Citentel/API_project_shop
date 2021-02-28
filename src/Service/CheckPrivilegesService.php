@@ -3,11 +3,9 @@
 namespace App\Service;
 
 use App\Entity\Roles;
-use App\Entity\Users;
 use App\Service\Searches\SearchRolesService;
 use App\Service\Searches\SearchUsersService;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class CheckPrivilegesService
 {
@@ -30,16 +28,9 @@ class CheckPrivilegesService
         $this->searchRolesService = $searchRolesService;
     }
 
-    public function checkPrivileges(int $access_uid, string $roleRequired): array
+    public function checkPrivileges(Request $request, string $roleRequired): array
     {
-        $isUserExist = $this->searchUsersService->findOneById($access_uid);
-
-        if ($isUserExist['code'] !== 200) {
-            return $this->generateResponseService->generateJsonResponse($isUserExist['code'], $isUserExist['message']);
-        }
-
-        /** @var Users $user */
-        $user = $isUserExist['data']['user'];
+        $accessUser = $request->request->get('access_user');
 
         $isRoleExist = $this->searchRolesService->findOneByName($roleRequired);
 
@@ -50,7 +41,7 @@ class CheckPrivilegesService
         /** @var Roles $role */
         $role = $isRoleExist['data']['role'];
 
-        $userCost = $user->getRole()->getCost();
+        $userCost = $accessUser->getRole()->getCost();
         $roleCost = $role->getCost();
 
         if ($userCost < $roleCost) {

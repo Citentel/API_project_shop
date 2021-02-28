@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchImageService;
@@ -10,12 +11,15 @@ use App\Service\Searches\SearchProductsService;
 use App\Service\Searches\SearchSexTypeService;
 use App\Service\Searches\SearchSizeTypeService;
 use App\Service\Searches\SearchSubTypeService;
+use App\Traits\accessTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractProduct
 {
+    use accessTrait;
+
     protected CheckRequestService $checkRequestService;
     protected GenerateResponseService $generateResponseService;
     protected EntityManagerInterface $entityManager;
@@ -36,7 +40,8 @@ abstract class AbstractProduct
         SearchSexTypeService $searchSexTypeService,
         SearchMainTypeService $searchMainTypeService,
         SearchSubTypeService $searchSubTypeService,
-        SearchImageService $searchImageService
+        SearchImageService $searchImageService,
+        CheckPrivilegesService $checkPrivilegesService
     )
     {
         $this->checkRequestService = $checkRequestService;
@@ -48,6 +53,7 @@ abstract class AbstractProduct
         $this->searchMainTypeService = $searchMainTypeService;
         $this->searchSubTypeService = $searchSubTypeService;
         $this->searchImageService = $searchImageService;
+        $this->checkPrivilegesService = $checkPrivilegesService;
     }
 
     abstract public function createProduct(Request $request): JsonResponse;

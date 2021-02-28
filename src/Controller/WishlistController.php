@@ -19,9 +19,15 @@ class WishlistController extends AbstractWishlist
      */
     public function addList(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
-            ->setFieldsRequired(['uid', 'name'])
+            ->setFieldsRequired(['name'])
             ->checker();
 
         if ($checkRequest['code'] !== 200) {
@@ -62,6 +68,12 @@ class WishlistController extends AbstractWishlist
      */
     public function removeList(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid', 'wishlist_id'])
@@ -110,6 +122,12 @@ class WishlistController extends AbstractWishlist
      */
     public function clearList(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid', 'wishlist_id'])
@@ -158,6 +176,12 @@ class WishlistController extends AbstractWishlist
      */
     public function addProduct(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid', 'wishlist_id', 'product_id'])
@@ -208,6 +232,12 @@ class WishlistController extends AbstractWishlist
      */
     public function removeProduct(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid', 'wishlist_id', 'product_id'])
@@ -258,6 +288,12 @@ class WishlistController extends AbstractWishlist
      */
     public function getList(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid', 'wishlist_id'])

@@ -3,17 +3,21 @@
 namespace App\Model;
 
 use App\Entity\Users;
+use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\EmailSendService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchRolesService;
 use App\Service\Searches\SearchUsersService;
 use App\Service\Validators\ValidatorUserDataService;
+use App\Traits\accessTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class AbstractUser extends AbstractController
 {
+    use accessTrait;
+
     protected CheckRequestService $checkRequestService;
     protected GenerateResponseService $generateResponseService;
     protected SearchUsersService $searchUsersService;
@@ -33,7 +37,8 @@ abstract class AbstractUser extends AbstractController
         SearchRolesService $searchRolesService,
         ValidatorUserDataService $validatorUserDataService,
         EmailPrepareModel $emailPrepareModel,
-        EmailSendService $emailSendService
+        EmailSendService $emailSendService,
+        CheckPrivilegesService $checkPrivilegesService
     )
     {
         $this->checkRequestService = $checkRequestService;
@@ -44,6 +49,7 @@ abstract class AbstractUser extends AbstractController
         $this->validatorUserDataService = $validatorUserDataService;
         $this->emailPrepareModel = $emailPrepareModel;
         $this->emailSendService = $emailSendService;
+        $this->checkPrivilegesService = $checkPrivilegesService;
     }
 
     protected function changeFirstname(Users $user, string $newFirstname): array

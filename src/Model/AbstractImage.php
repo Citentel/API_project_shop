@@ -2,10 +2,12 @@
 
 namespace App\Model;
 
+use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchImageService;
 use App\Service\Searches\SearchProductsService;
+use App\Traits\accessTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +15,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 abstract class AbstractImage
 {
+    use accessTrait;
+
     protected CheckRequestService $checkRequestService;
     protected GenerateResponseService $generateResponseService;
     protected EntityManagerInterface $entityManager;
@@ -28,9 +32,11 @@ abstract class AbstractImage
         EntityManagerInterface $entityManager,
         SearchImageService $searchImageService,
         SearchProductsService $searchProductsService,
-        KernelInterface $appKernel
+        KernelInterface $appKernel,
+        CheckPrivilegesService $checkPrivilegesService
     )
     {
+        $this->checkPrivilegesService = $checkPrivilegesService;
         $this->checkRequestService = $checkRequestService;
         $this->generateResponseService = $generateResponseService;
         $this->entityManager = $entityManager;

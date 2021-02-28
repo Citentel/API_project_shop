@@ -7,6 +7,7 @@ use App\Entity\MainType;
 use App\Entity\Products;
 use App\Entity\SubType;
 use App\Model\AbstractMainType;
+use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchMainTypeService;
@@ -33,9 +34,11 @@ class MainTypeController extends AbstractMainType
         SearchMainTypeService $searchMainTypeService,
         SearchSubTypeService $searchSubTypeService,
         EntityManagerInterface $entityManager,
-        SearchProductsService $searchProductsService
+        SearchProductsService $searchProductsService,
+        CheckPrivilegesService $checkPrivilegesService
     )
     {
+        parent::__construct($checkPrivilegesService);
         $this->checkRequestService = $checkRequestService;
         $this->generateResponseService = $generateResponseService;
         $this->searchMainTypeService = $searchMainTypeService;
@@ -51,6 +54,12 @@ class MainTypeController extends AbstractMainType
      */
     public function addType(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['name'])
@@ -84,6 +93,12 @@ class MainTypeController extends AbstractMainType
      */
     public function addSubTypeToMainType(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['sub_type_id', 'main_type_id'])
@@ -128,6 +143,12 @@ class MainTypeController extends AbstractMainType
      */
     public function removeSubTypeFromMainType(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['sub_type_id', 'main_type_id'])
@@ -322,6 +343,12 @@ class MainTypeController extends AbstractMainType
      */
     public function updateType(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['id', 'name'])

@@ -2,15 +2,19 @@
 
 namespace App\Model;
 
+use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchRolesService;
+use App\Traits\accessTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractRole
 {
+    use accessTrait;
+
     protected CheckRequestService $checkRequestService;
     protected GenerateResponseService $generateResponseService;
     protected EntityManagerInterface $entityManager;
@@ -21,13 +25,15 @@ abstract class AbstractRole
         CheckRequestService $checkRequestService,
         GenerateResponseService $generateResponseService,
         EntityManagerInterface $entityManager,
-        SearchRolesService $searchRolesService
+        SearchRolesService $searchRolesService,
+        CheckPrivilegesService $checkPrivilegesService
     )
     {
         $this->checkRequestService = $checkRequestService;
         $this->generateResponseService = $generateResponseService;
         $this->entityManager = $entityManager;
         $this->searchRolesService = $searchRolesService;
+        $this->checkPrivilegesService = $checkPrivilegesService;
     }
 
     abstract public function addRole(Request $request): JsonResponse;

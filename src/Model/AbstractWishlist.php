@@ -2,17 +2,21 @@
 
 namespace App\Model;
 
+use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchProductsService;
 use App\Service\Searches\SearchUsersService;
 use App\Service\Searches\SearchWishlistService;
+use App\Traits\accessTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractWishlist
 {
+    use accessTrait;
+
     protected CheckRequestService $checkRequestService;
     protected GenerateResponseService $generateResponseService;
     protected SearchUsersService $searchUsersService;
@@ -27,7 +31,8 @@ abstract class AbstractWishlist
         SearchUsersService $searchUsersService,
         SearchProductsService $searchProductsService,
         SearchWishlistService $searchWishlistService,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        CheckPrivilegesService $checkPrivilegesService
     )
     {
         $this->checkRequestService = $checkRequestService;
@@ -36,6 +41,7 @@ abstract class AbstractWishlist
         $this->searchProductsService = $searchProductsService;
         $this->searchWishlistService = $searchWishlistService;
         $this->entityManager = $entityManager;
+        $this->checkPrivilegesService = $checkPrivilegesService;
     }
 
     abstract public function addList(Request $request): JsonResponse;

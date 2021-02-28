@@ -18,6 +18,12 @@ class AddressController extends AbstractAddress
      */
     public function addAddress(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid', 'country', 'city', 'street', 'home_number', 'premises_number', 'zip'])
@@ -78,6 +84,12 @@ class AddressController extends AbstractAddress
      */
     public function getAddressesUser(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['uid'])
@@ -136,6 +148,12 @@ class AddressController extends AbstractAddress
      */
     public function changeAddress(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['address_id', 'uid'])
