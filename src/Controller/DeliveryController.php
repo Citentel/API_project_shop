@@ -139,6 +139,12 @@ class DeliveryController
      */
     public function getDelivery(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         $checkRequest = $this->checkRequestService
             ->setRequest($request)
             ->setFieldsRequired(['id'])
@@ -176,6 +182,12 @@ class DeliveryController
      */
     public function getDeliveries(Request $request): JsonResponse
     {
+        $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
+
+        if ($isUserHaveAccess['code'] !== 200) {
+            return $isUserHaveAccess['data'];
+        }
+
         /** @var Delivery[] $deliveryTypes */
         $deliveryTypes = $this->entityManager->getRepository(Delivery::class)->findAll();
 
