@@ -422,7 +422,7 @@
         "get": {
           "ep1": {
             "path": "api/delivery/getOne",
-            "params": "?uid=int",
+            "params": "?id=int",
             "token": true
           },
           "ep2": {
@@ -452,7 +452,7 @@
         "get": {
           "ep1": {
             "path": "api/status/getOne",
-            "params": "?uid=int",
+            "params": "?id=int",
             "token": true
           },
           "ep2": {
@@ -471,6 +471,36 @@
         "patch": {
           "ep1": {
             "path": "api/status/update",
+            "params": "{\"id\" int, \"name\": ?string}",
+            "token": true
+          }
+        }
+      }
+    },
+    "payment": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/payment/getOne",
+            "params": "?id=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/payment/getAll",
+            "params": "",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/payment/add",
+            "params": "{\"name\": string}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/payment/update",
             "params": "{\"id\" int, \"name\": ?string}",
             "token": true
           }
