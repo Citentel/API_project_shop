@@ -20,7 +20,7 @@ class SearchAddressesService extends AbstractSearchService
     )
     {
         parent::__construct($generateResponseService, $entityManager);
-        $this->$searchUsersService = $searchUsersService;
+        $this->searchUsersService = $searchUsersService;
     }
 
 
