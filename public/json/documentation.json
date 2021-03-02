@@ -506,6 +506,31 @@
           }
         }
       }
+    },
+    "order": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/order/get",
+            "params": "",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/order/add",
+            "params": "{\"products\": array, \"address\": int, \"payent\": int, \"delivery\": int}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/order/update",
+            "params": "{\"id\": int, \"status\": int}",
+            "token": true
+          }
+        }
+      }
     }
   }
 }
