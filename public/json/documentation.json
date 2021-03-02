@@ -416,6 +416,66 @@
           }
         }
       }
+    },
+    "delivery": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/delivery/getOne",
+            "params": "?uid=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/delivery/getAll",
+            "params": "",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/delivery/add",
+            "params": "{\"name\": string, \"price\" int, \"price_crossed\": ?int}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/delivery/update",
+            "params": "{\"id\" int, \"name\": ?string, \"price\" ?int, \"price_crossed\": ?int}",
+            "token": true
+          }
+        }
+      }
+    },
+    "status": {
+      "methods": {
+        "get": {
+          "ep1": {
+            "path": "api/status/getOne",
+            "params": "?uid=int",
+            "token": true
+          },
+          "ep2": {
+            "path": "api/status/getAll",
+            "params": "",
+            "token": true
+          }
+        },
+        "post": {
+          "ep1": {
+            "path": "api/status/add",
+            "params": "{\"name\": string}",
+            "token": true
+          }
+        },
+        "patch": {
+          "ep1": {
+            "path": "api/status/update",
+            "params": "{\"id\" int, \"name\": ?string}",
+            "token": true
+          }
+        }
+      }
     }
   }
 }
