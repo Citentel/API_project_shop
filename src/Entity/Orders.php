@@ -42,11 +42,6 @@ class Orders
     private $status;
 
     /**
-     * @ORM\Column(type="array", nullable=false)
-     */
-    private array $address = [];
-
-    /**
      * @ORM\ManyToOne(targetEntity=Payment::class, inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -66,6 +61,12 @@ class Orders
      * @ORM\Column(type="datetime", nullable=false)
      */
     private \DateTimeInterface $dataUpdated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Addresses::class, inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $address;
 
     public function __construct()
     {
@@ -137,18 +138,6 @@ class Orders
         return $this;
     }
 
-    public function getAddress(): ?array
-    {
-        return $this->address;
-    }
-
-    public function setAddress(array $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
     public function getPayment(): ?Payment
     {
         return $this->payment;
@@ -193,6 +182,18 @@ class Orders
     public function setDataUpdated(\DateTimeInterface $dataUpdated): self
     {
         $this->dataUpdated = $dataUpdated;
+
+        return $this;
+    }
+
+    public function getAddress(): ?Addresses
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Addresses $address): self
+    {
+        $this->address = $address;
 
         return $this;
     }
