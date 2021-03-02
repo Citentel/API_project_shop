@@ -68,6 +68,12 @@ class Orders
      */
     private $address;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Delivery::class, inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $delivery;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -194,6 +200,18 @@ class Orders
     public function setAddress(?Addresses $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getDelivery(): ?Delivery
+    {
+        return $this->delivery;
+    }
+
+    public function setDelivery(?Delivery $delivery): self
+    {
+        $this->delivery = $delivery;
 
         return $this;
     }
