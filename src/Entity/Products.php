@@ -79,6 +79,11 @@ class Products
      */
     private $wishlist;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Orders::class, mappedBy="products")
+     */
+    private $orders;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -86,6 +91,7 @@ class Products
         $this->subTypes = new ArrayCollection();
         $this->sizeTypes = new ArrayCollection();
         $this->sexTypes = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -308,6 +314,33 @@ class Products
     public function setWishlist(?Wishlist $wishlist): self
     {
         $this->wishlist = $wishlist;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Orders[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Orders $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Orders $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            $order->removeProduct($this);
+        }
 
         return $this;
     }
