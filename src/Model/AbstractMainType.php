@@ -5,7 +5,7 @@ namespace App\Model;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractMainType extends AbstractType
+abstract class AbstractMainType extends AbstractProductTypes
 {
     abstract public function addSubTypeToMainType(Request $request): JsonResponse;
 

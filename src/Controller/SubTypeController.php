@@ -5,7 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Products;
 use App\Entity\SubType;
-use App\Model\AbstractType;
+use App\Model\AbstractProductTypes;
 use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SubTypeController extends AbstractType
+class SubTypeController extends AbstractProductTypes
 {
     protected CheckRequestService $checkRequestService;
     protected GenerateResponseService $generateResponseService;

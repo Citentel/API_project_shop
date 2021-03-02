@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Delivery;
+use App\Model\AbstractTypes;
 use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DeliveryController
+class DeliveryController extends AbstractTypes
 {
     use accessTrait;
 
@@ -31,11 +32,11 @@ class DeliveryController
         CheckPrivilegesService $checkPrivilegesService
     )
     {
+        parent::__construct($checkPrivilegesService);
         $this->checkRequestService = $checkRequestService;
         $this->generateResponseService = $generateResponseService;
         $this->entityManager = $entityManager;
         $this->searchDeliveryService = $searchDeliveryService;
-        $this->checkPrivilegesService = $checkPrivilegesService;
     }
 
     /**
@@ -43,7 +44,7 @@ class DeliveryController
      * @return JsonResponse
      * @Route("api/delivery/add", methods={"POST"})
      */
-    public function addDelivery(Request $request): JsonResponse
+    public function addType(Request $request): JsonResponse
     {
         $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
 
@@ -85,7 +86,7 @@ class DeliveryController
      * @return JsonResponse
      * @Route("api/delivery/update", methods={"PATCH"})
      */
-    public function updateDelivery(Request $request): JsonResponse
+    public function updateType(Request $request): JsonResponse
     {
         $isUserHaveAccess = $this->checkAccess($request, 'ROLE_ADMIN');
 
@@ -137,7 +138,7 @@ class DeliveryController
      * @return JsonResponse
      * @Route("api/delivery/getOne", methods={"GET"})
      */
-    public function getDelivery(Request $request): JsonResponse
+    public function getType(Request $request): JsonResponse
     {
         $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
 
@@ -180,7 +181,7 @@ class DeliveryController
      * @return JsonResponse
      * @Route("api/delivery/getAll", methods={"GET"})
      */
-    public function getDeliveries(Request $request): JsonResponse
+    public function getTypes(Request $request): JsonResponse
     {
         $isUserHaveAccess = $this->checkAccess($request, 'ROLE_USER');
 
