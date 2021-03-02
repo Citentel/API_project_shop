@@ -21,7 +21,7 @@ class Documentation extends AbstractController
     }
 
     /**
-     * @Route("/doc")
+     * @Route("/")
      */
     public function renderDocumentation(): Response
     {

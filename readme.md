@@ -37,7 +37,7 @@ php bin/console server:run
 or
 symfony server:start
 ```
-If the server is working correctly go to url: 127.0.0.1:8000/documentation. There you will find a detailed documentation for the api.
+If the server is working correctly go to url: 127.0.0.1:8000/. There you will find a detailed documentation for the api.
 
 # Author 
 
