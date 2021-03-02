@@ -8,7 +8,6 @@ use App\Service\CheckPrivilegesService;
 use App\Service\CheckRequestService;
 use App\Service\GenerateResponseService;
 use App\Service\Searches\SearchDeliveryService;
-use App\Traits\accessTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DeliveryController extends AbstractTypes
 {
-    use accessTrait;
-
     private CheckRequestService $checkRequestService;
     private GenerateResponseService $generateResponseService;
     private EntityManagerInterface $entityManager;
