@@ -4,13 +4,59 @@ namespace App\Controller;
 
 use App\Entity\Roles;
 use App\Entity\Users;
-use App\Model\AbstractUser;
+use App\Model\EmailPrepareModel;
+use App\Service\CheckPrivilegesService;
+use App\Service\CheckRequestService;
+use App\Service\EmailSendService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchRolesService;
+use App\Service\Searches\SearchUsersService;
+use App\Service\Validators\ValidatorUserDataService;
+use App\Traits\accessTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UserController extends AbstractUser
+class UserController extends AbstractController
 {
+    use accessTrait;
+
+    private CheckRequestService $checkRequestService;
+    private GenerateResponseService $generateResponseService;
+    private SearchUsersService $searchUsersService;
+    private EntityManagerInterface $entityManager;
+    private SearchRolesService $searchRolesService;
+    private ValidatorUserDataService $validatorUserDataService;
+    private EmailPrepareModel $emailPrepareModel;
+    private EmailSendService $emailSendService;
+    private static array $REGEX_CODE = ['/', '.', ',', '\\'];
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        EntityManagerInterface $entityManager,
+        SearchUsersService $searchUsersService,
+        SearchRolesService $searchRolesService,
+        ValidatorUserDataService $validatorUserDataService,
+        EmailPrepareModel $emailPrepareModel,
+        EmailSendService $emailSendService,
+        CheckPrivilegesService $checkPrivilegesService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->entityManager = $entityManager;
+        $this->searchUsersService = $searchUsersService;
+        $this->searchRolesService = $searchRolesService;
+        $this->validatorUserDataService = $validatorUserDataService;
+        $this->emailPrepareModel = $emailPrepareModel;
+        $this->emailSendService = $emailSendService;
+        $this->checkPrivilegesService = $checkPrivilegesService;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
@@ -536,5 +582,101 @@ class UserController extends AbstractUser
         $this->entityManager->flush();
 
         return $this->generateResponseService->generateJsonResponse(200, 'updated role')['data'];
+    }
+
+    private function changeFirstname(Users $user, string $newFirstname): array
+    {
+        $checkDataFromUser = $this->validatorUserDataService->checkFirstname($newFirstname);
+
+        if ($checkDataFromUser['code'] !== 200) {
+            return $checkDataFromUser;
+        }
+
+        $user->setFirstname($newFirstname);
+
+        return $this->generateResponseService->generateArrayResponse(200, 'changed firstname', ['user' => $user]);
+    }
+
+    private function changeLastname(Users $user, string $newLastname): array
+    {
+        $checkDataFromUser = $this->validatorUserDataService->checkLastname($newLastname);
+
+        if ($checkDataFromUser['code'] !== 200) {
+            return $checkDataFromUser;
+        }
+
+        $user->setLastname($newLastname);
+
+        return $this->generateResponseService->generateArrayResponse(200, 'changed lastname', ['user' => $user]);
+    }
+
+    private function changeEmail(Users $user, string $newEmail): array
+    {
+        $isUserExist = $this->searchUsersService->findOneByEmail($newEmail);
+
+        if ($isUserExist['code'] === 200) {
+            return $this->generateResponseService->generateJsonResponse(409, 'email exist');
+        }
+
+        $checkDataFromUser = $this->validatorUserDataService->checkEmail($newEmail);
+
+        if ($checkDataFromUser['code'] !== 200) {
+            return $checkDataFromUser;
+        }
+
+        $verifyCode = $this->generateCode($newEmail);
+
+        $user->setArchivedEmail($user->getEmail());
+        $user->setEmail($newEmail)->setVerifyCode($verifyCode);
+
+        $email = $this->emailPrepareModel
+            ->to($newEmail)
+            ->subject('User email authorization')
+            ->html(
+                '<p><b>Hello there!</b></p><p>Your email address has been changed. To use the app fully go to the link below and verify your email.</p><p>http://127.0.0.1::8000/user/verify/?uid='.$user->getId().'&vc='.$verifyCode.'</p><p><small>This message has been generated automatically. Do not reply to this message.</small></p>');
+
+        $this->emailSendService->sendEmail($email);
+
+        return $this->generateResponseService->generateArrayResponse(200, 'changed email', ['user' => $user]);
+    }
+
+    private function changePassword(Users $user, string $newPassword): array
+    {
+        $checkDataFromUser = $this->validatorUserDataService->checkPassword($newPassword);
+
+        if ($checkDataFromUser['code'] !== 200) {
+            return $checkDataFromUser;
+        }
+
+        $user->setPassword($newPassword);
+
+        $email = $this->emailPrepareModel
+            ->to($user->getEmail())
+            ->subject('User change password')
+            ->html(
+                '<p><b>Hello there!</b></p><p>Your password has been changed<p><small>This message has been generated automatically. Do not reply to this message.</small></p>');
+
+        $this->emailSendService->sendEmail($email);
+
+        return $this->generateResponseService->generateArrayResponse(200, 'changed password', ['user' => $user]);
+    }
+
+    private function generateCode(string $email, int $maxLength = 10): string
+    {
+        $code = substr(password_hash(md5($email), PASSWORD_BCRYPT), 0, $maxLength);
+        return str_replace(self::$REGEX_CODE, '0', $code);
+    }
+
+    private function compareTwoStrings(string $str1, string $str2): bool
+    {
+        $str1 = $this->prepareStringToCompare($str1);
+        $str2 = $this->prepareStringToCompare($str2);
+
+        return strcmp($str1, $str2) === 0;
+    }
+
+    private function prepareStringToCompare(string $toCompare): string
+    {
+        return preg_replace('/\s+/', '', strtolower($toCompare));
     }
 }

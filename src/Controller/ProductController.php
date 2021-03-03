@@ -5,13 +5,61 @@ namespace App\Controller;
 
 use App\Entity\Images;
 use App\Entity\Products;
-use App\Model\AbstractProduct;
+use App\Service\CheckPrivilegesService;
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchImageService;
+use App\Service\Searches\SearchMainTypeService;
+use App\Service\Searches\SearchProductsService;
+use App\Service\Searches\SearchSexTypeService;
+use App\Service\Searches\SearchSizeTypeService;
+use App\Service\Searches\SearchSubTypeService;
+use App\Traits\accessTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ProductController extends AbstractProduct
+class ProductController
 {
+    use accessTrait;
+
+    private CheckRequestService $checkRequestService;
+    private GenerateResponseService $generateResponseService;
+    private EntityManagerInterface $entityManager;
+    private SearchProductsService $searchProductService;
+    private SearchSizeTypeService $searchSizeTypeService;
+    private SearchSexTypeService $searchSexTypeService;
+    private SearchMainTypeService $searchMainTypeService;
+    private SearchSubTypeService $searchSubTypeService;
+    private SearchImageService $searchImageService;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        EntityManagerInterface $entityManager,
+        SearchProductsService $searchProductService,
+        SearchSizeTypeService $searchSizeTypeService,
+        SearchSexTypeService $searchSexTypeService,
+        SearchMainTypeService $searchMainTypeService,
+        SearchSubTypeService $searchSubTypeService,
+        SearchImageService $searchImageService,
+        CheckPrivilegesService $checkPrivilegesService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->entityManager = $entityManager;
+        $this->searchProductService = $searchProductService;
+        $this->searchSizeTypeService = $searchSizeTypeService;
+        $this->searchSexTypeService = $searchSexTypeService;
+        $this->searchMainTypeService = $searchMainTypeService;
+        $this->searchSubTypeService = $searchSubTypeService;
+        $this->searchImageService = $searchImageService;
+        $this->checkPrivilegesService = $checkPrivilegesService;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse

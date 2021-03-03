@@ -4,13 +4,41 @@ namespace App\Controller;
 
 use App\Entity\Roles;
 use App\Entity\Users;
-use App\Model\AbstractRole;
+use App\Service\CheckPrivilegesService;
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchRolesService;
+use App\Traits\accessTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RoleController extends AbstractRole
+class RoleController
 {
+    use accessTrait;
+
+    private CheckRequestService $checkRequestService;
+    private GenerateResponseService $generateResponseService;
+    private EntityManagerInterface $entityManager;
+    private SearchRolesService $searchRolesService;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        EntityManagerInterface $entityManager,
+        SearchRolesService $searchRolesService,
+        CheckPrivilegesService $checkPrivilegesService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->entityManager = $entityManager;
+        $this->searchRolesService = $searchRolesService;
+        $this->checkPrivilegesService = $checkPrivilegesService;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse

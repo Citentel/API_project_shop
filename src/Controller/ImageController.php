@@ -4,13 +4,51 @@ namespace App\Controller;
 
 use App\Entity\Images;
 use App\Entity\Products;
-use App\Model\AbstractImage;
+use App\Service\CheckPrivilegesService;
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchImageService;
+use App\Service\Searches\SearchProductsService;
+use App\Traits\accessTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ImageController extends AbstractImage
+class ImageController
 {
+    use accessTrait;
+
+    private CheckRequestService $checkRequestService;
+    private GenerateResponseService $generateResponseService;
+    private EntityManagerInterface $entityManager;
+    private SearchImageService $searchImageService;
+    private SearchProductsService $searchProductsService;
+    private KernelInterface $appKernel;
+    private string $imagesPath;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        EntityManagerInterface $entityManager,
+        SearchImageService $searchImageService,
+        SearchProductsService $searchProductsService,
+        KernelInterface $appKernel,
+        CheckPrivilegesService $checkPrivilegesService
+    )
+    {
+        $this->checkPrivilegesService = $checkPrivilegesService;
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->entityManager = $entityManager;
+        $this->searchImageService = $searchImageService;
+        $this->searchProductsService = $searchProductsService;
+        $this->appKernel = $appKernel;
+        $this->imagesPath = $this->appKernel->getProjectDir() . '/public/images/';
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse

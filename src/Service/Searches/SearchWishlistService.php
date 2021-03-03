@@ -8,7 +8,6 @@ use App\Model\AbstractSearchService;
 
 class SearchWishlistService extends AbstractSearchService
 {
-
     public function findOneById(int $id): array
     {
         $wishlist = $this->entityManager->getRepository(Wishlist::class)->findOneById($id);

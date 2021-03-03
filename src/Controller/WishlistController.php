@@ -5,13 +5,49 @@ namespace App\Controller;
 use App\Entity\Products;
 use App\Entity\Users;
 use App\Entity\Wishlist;
-use App\Model\AbstractWishlist;
+use App\Service\CheckPrivilegesService;
+use App\Service\CheckRequestService;
+use App\Service\GenerateResponseService;
+use App\Service\Searches\SearchProductsService;
+use App\Service\Searches\SearchUsersService;
+use App\Service\Searches\SearchWishlistService;
+use App\Traits\accessTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class WishlistController extends AbstractWishlist
+class WishlistController
 {
+    use accessTrait;
+
+    private CheckRequestService $checkRequestService;
+    private GenerateResponseService $generateResponseService;
+    private SearchUsersService $searchUsersService;
+    private SearchProductsService $searchProductsService;
+    private SearchWishlistService $searchWishlistService;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct
+    (
+        CheckRequestService $checkRequestService,
+        GenerateResponseService $generateResponseService,
+        SearchUsersService $searchUsersService,
+        SearchProductsService $searchProductsService,
+        SearchWishlistService $searchWishlistService,
+        EntityManagerInterface $entityManager,
+        CheckPrivilegesService $checkPrivilegesService
+    )
+    {
+        $this->checkRequestService = $checkRequestService;
+        $this->generateResponseService = $generateResponseService;
+        $this->searchUsersService = $searchUsersService;
+        $this->searchProductsService = $searchProductsService;
+        $this->searchWishlistService = $searchWishlistService;
+        $this->entityManager = $entityManager;
+        $this->checkPrivilegesService = $checkPrivilegesService;
+    }
+
     /**
      * @param Request $request
      * @return JsonResponse
