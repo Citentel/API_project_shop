@@ -31,6 +31,9 @@ Sometimes you need to set permissions for the var and jwt folders. **Remember to
 chmod -R 777 /var
 chmod -R 777 /jwt
 ```
+Then fill in the configuration in the .env file
+Set your app email address in services.yaml
+
 Now you can try to run the server 
 ```
 php bin/console server:run

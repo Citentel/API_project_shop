@@ -1,5 +1,5 @@
 parameters:
-    app_email: 'api.project.shop@gmail.com'
+    app_email: 'name@server.com'
 services:
     _defaults:
         autowire: true
