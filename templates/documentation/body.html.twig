@@ -4,6 +4,9 @@
     <div class="container my-4">
         <h1>Documentation - API</h1>
         <hr>
+
+        <p>If a token is marked green next to the method, it means that the token we pass in the headers must be added to the request.</p>
+
         {% for name, element in config.api %}
             <h3>{{ name | title }}</h3>
             {% for key, method in element.methods %}
